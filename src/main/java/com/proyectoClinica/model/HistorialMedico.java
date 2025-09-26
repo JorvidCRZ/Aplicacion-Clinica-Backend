@@ -1,0 +1,41 @@
+package com.proyectoClinica.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "historial_medico")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class HistorialMedico {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_historial")
+    private Integer idHistorial;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_paciente", nullable = false)
+    private Paciente paciente;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cita", nullable = false)
+    private Cita cita;
+
+    @Column
+    private String diagnostico;
+
+    @Column
+    private String observaciones;
+
+    @Column
+    private LocalDateTime fecha;
+
+}
