@@ -6,14 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Entity
 @Table(name = "medico")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class Medico {
 
     @Id
@@ -22,21 +21,15 @@ public class Medico {
     private Integer idMedico;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario;
-
-    @Column(nullable = false, length = 100)
-    private String nombre;
+    @JoinColumn(name = "id_persona", nullable = false)
+    private Persona persona;
 
     @Column(nullable = false, length = 100)
     private String apellido;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, unique = true)
     private String colegiatura;
 
     @Column(name = "experiencia_anios")
     private Integer experienciaAnios;
-
-    @Column(name = "precio_consulta")
-    private BigDecimal precioConsulta;
 }

@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -28,12 +27,12 @@ public class Cita {
     private Paciente paciente;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_medico", nullable = false)
-    private Medico medico;
+    @JoinColumn(name = "id_detalle_cita", nullable = false)
+    private DetalleCita detalleCita;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_disponibilidad", nullable = false)
-    private DisponibilidadMedico disponibilidadMedico;
+    private DisponibilidadMedico disponibilidad;
 
     @Column(name = "fecha_cita", nullable = false)
     private LocalDate fechaCita;
@@ -41,13 +40,12 @@ public class Cita {
     @Column(name = "hora_cita", nullable = false)
     private LocalTime horaCita;
 
-    @Column
+    @Column(nullable = false, length = 50)
     private String estado;
 
     @Column(name = "motivo_consulta")
     private String motivoConsulta;
 
-    @Column
-    private BigDecimal precioFinal;
-
+    @Column(name = "precio_total", nullable = false)
+    private Double precioTotal;
 }

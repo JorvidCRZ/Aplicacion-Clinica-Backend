@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class Recordatorio {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_recordatorio")
     private Integer idRecordatorio;
 
@@ -31,6 +31,6 @@ public class Recordatorio {
     @Column(nullable = false, length = 50)
     private String tipo;
 
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private String estado;
 }

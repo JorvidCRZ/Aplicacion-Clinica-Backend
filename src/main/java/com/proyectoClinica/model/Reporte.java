@@ -21,15 +21,16 @@ public class Reporte {
     @Column(name = "id_reporte")
     private Integer idReporte;
 
-    @Column(name = "id_admin", nullable = false)
-    private Integer idAdmin;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_admin")
+    private Usuario admin;
 
-    @Column
-    private byte[] logo;
+    @Column(length = 50)
+    private String tipo;
 
     @Column(name = "fecha_generacion")
     private LocalDateTime fechaGeneracion;
 
-    @Column
+    @Column(name = "ruta_archivo")
     private String rutaArchivo;
 }

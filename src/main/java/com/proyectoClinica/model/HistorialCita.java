@@ -18,20 +18,19 @@ public class HistorialCita {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_hotorial_cita")
+    @Column(name = "id_historial_cita")
     private Integer idHistorialCita;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cita", nullable = false)
+    @JoinColumn(name = "id_cita")
     private Cita cita;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String accion;
 
-    @Column
+    @Column(nullable = false)
     private LocalDateTime fecha;
 
     @Column
     private String detalle;
-
 }

@@ -6,18 +6,24 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
-@Table(name = "especialidad")
+@Table(name = "sub_especialidad")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Especialidad {
+public class SubEspecialidad {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_especialidad")
-    private Integer idEspecialidad;
+    @Column(name = "id_subespecialidad")
+    private Integer idSubespecialidad;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_especialidad", nullable = false)
+    private Especialidad especialidad;
 
     @Column(nullable = false, length = 100)
     private String nombre;
@@ -25,6 +31,9 @@ public class Especialidad {
     @Column
     private String descripcion;
 
-    @Column
+    @Column(name = "url_img")
     private String urlImg;
+
+    @Column(name = "precio_subespecialidad")
+    private BigDecimal precioSubespecial;
 }

@@ -6,24 +6,29 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
-@Table(name = "paciente")
+@Table(name = "pago_detalle")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Paciente {
+public class PagoDetalle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_paciente")
-    private Integer idPaciente;
+    @Column(name = "id_pago_detalle")
+    private Integer idPagoDetalle;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_persona", nullable = false)
-    private Persona persona;
+    @JoinColumn(name = "id_cita")
+    private Cita cita;
+
+    @Column(name = "monto_asociado", nullable = false)
+    private BigDecimal montoAsociado;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario_agrego")
-    private Usuario usuarioAgrego;
+    @JoinColumn(name = "id_pago", nullable = false)
+    private Pago pago;
 }

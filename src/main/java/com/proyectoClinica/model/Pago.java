@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "pago")
@@ -22,19 +22,15 @@ public class Pago {
     @Column(name = "id_pago")
     private Integer idPago;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cita", nullable = false)
-    private Cita cita;
+    @Column(name = "monto_total", nullable = false)
+    private BigDecimal montoTotal;
 
-    @Column(nullable = false)
-    private BigDecimal monto;
-
-    @Column(nullable = false,  length = 50)
+    @Column(length = 50)
     private String metodo;
 
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private String estado;
 
-    @Column
-    private LocalDate fechaPago;
+    @Column(name = "fecha_pago")
+    private LocalDateTime fechaPago;
 }

@@ -18,14 +18,14 @@ public class HistorialAcceso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_historial_acceso")
-    private Integer idHistorialAcceso;
+    @Column(name = "id_historial")
+    private Integer idHistorial;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
-    @Column(name = "fecha_hora")
+    @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
 
     @Column(name = "ip_origen", length = 50)
@@ -33,5 +33,4 @@ public class HistorialAcceso {
 
     @Column
     private String accion;
-
 }

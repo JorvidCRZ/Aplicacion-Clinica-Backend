@@ -22,12 +22,16 @@ public class HistorialMedico {
     private Integer idHistorial;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_paciente", nullable = false)
+    @JoinColumn(name = "id_paciente")
     private Paciente paciente;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cita", nullable = false)
+    @JoinColumn(name = "id_cita")
     private Cita cita;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_medico")
+    private Medico medico;
 
     @Column
     private String diagnostico;
@@ -36,6 +40,8 @@ public class HistorialMedico {
     private String observaciones;
 
     @Column
-    private LocalDateTime fecha;
+    private String receta;
 
+    @Column
+    private LocalDateTime fecha;
 }

@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
@@ -42,6 +41,5 @@ public class DisponibilidadMedico {
     private String nombreTurno;
 
     @Column
-    private LocalDate vigencia;
-
+    private Boolean vigencia;
 }

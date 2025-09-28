@@ -1,7 +1,10 @@
 package com.proyectoClinica.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "rol_permiso")
@@ -25,5 +28,4 @@ public class RolPermiso {
 
     @Column(nullable = false, length = 50)
     private String accion;
-
 }
