@@ -46,6 +46,4 @@ public class Cita {
     @Column(name = "motivo_consulta")
     private String motivoConsulta;
 
-    @Column(name = "precio_total", nullable = false)
-    private Double precioTotal;
 }

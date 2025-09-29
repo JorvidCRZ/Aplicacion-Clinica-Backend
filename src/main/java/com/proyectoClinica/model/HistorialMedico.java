@@ -18,7 +18,7 @@ public class HistorialMedico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_historial")
+    @Column(name = "id_historial_medico")
     private Integer idHistorial;
 
     @ManyToOne(fetch = FetchType.LAZY)

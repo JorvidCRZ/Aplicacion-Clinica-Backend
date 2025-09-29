@@ -24,9 +24,6 @@ public class Medico {
     @JoinColumn(name = "id_persona", nullable = false)
     private Persona persona;
 
-    @Column(nullable = false, length = 100)
-    private String apellido;
-
     @Column(nullable = false, unique = true)
     private String colegiatura;
 

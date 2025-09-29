@@ -18,7 +18,7 @@ public class HistorialAcceso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_historial")
+    @Column(name = "id_historial_acceso")
     private Integer idHistorial;
 
     @ManyToOne(fetch = FetchType.LAZY)
