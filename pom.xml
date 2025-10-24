@@ -88,13 +88,10 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-<<<<<<< HEAD
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 		<dependency>
-=======
->>>>>>> 1428c82020aa3c5f5d7857a303df7f2121fe3842
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
@@ -135,8 +132,4 @@
 			</plugin>
 		</plugins>
 	</build>
-<<<<<<< HEAD
-=======
-
->>>>>>> 1428c82020aa3c5f5d7857a303df7f2121fe3842
 </project>
