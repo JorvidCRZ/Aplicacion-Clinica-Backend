@@ -11,4 +11,7 @@ public interface SubEspecialidadService {
     SubEspecialidadResponseDTO obtenerPorId(Integer id);
     List<SubEspecialidadResponseDTO> listar();
     void eliminar(Integer id);
+
+    // 🔹 Nuevo método
+    List<SubEspecialidadResponseDTO> listarPorEspecialidad(Integer idEspecialidad);
 }

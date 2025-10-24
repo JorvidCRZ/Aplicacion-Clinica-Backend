@@ -26,9 +26,24 @@ public class EspecialidadServiceImpl implements EspecialidadService {
     }
 
     @Override
+    public EspecialidadResponseDTO actualizar(Integer id, EspecialidadRequestDTO requestDTO) {
+        Especialidad especialidad = especialidadRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Especialidad no encontrada"));
+        // Actualizamos campos
+        especialidad.setNombre(requestDTO.getNombre());
+        especialidad.setDescripcion(requestDTO.getDescripcion());
+        especialidad.setUrlImgIcono(requestDTO.getUrlImgIcono());
+        especialidad.setUrlImgPort(requestDTO.getUrlImgPort());
+        especialidad.setDescripcionPortada(requestDTO.getDescripcionPortada());
+
+        Especialidad actualizada = especialidadRepository.save(especialidad);
+        return especialidadMapper.toDTO(actualizada);
+    }
+
+    @Override
     public EspecialidadResponseDTO obtenerPorId(Integer id) {
         Especialidad especialidad = especialidadRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Especialidad no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Especialidad no encontrada"));
         return especialidadMapper.toDTO(especialidad);
     }
 
@@ -39,6 +54,9 @@ public class EspecialidadServiceImpl implements EspecialidadService {
 
     @Override
     public void eliminar(Integer id) {
+        if (!especialidadRepository.existsById(id)) {
+            throw new RuntimeException("Especialidad no encontrada");
+        }
         especialidadRepository.deleteById(id);
     }
 }

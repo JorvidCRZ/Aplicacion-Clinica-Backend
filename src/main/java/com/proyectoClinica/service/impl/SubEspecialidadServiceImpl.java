@@ -28,7 +28,7 @@ public class SubEspecialidadServiceImpl implements SubEspecialidadService {
     @Override
     public SubEspecialidadResponseDTO obtenerPorId(Integer id) {
         SubEspecialidad subEspecialidad = subEspecialidadRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Subespecialidad no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Subespecialidad no encontrada"));
         return subEspecialidadMapper.toDTO(subEspecialidad);
     }
 
@@ -40,5 +40,12 @@ public class SubEspecialidadServiceImpl implements SubEspecialidadService {
     @Override
     public void eliminar(Integer id) {
         subEspecialidadRepository.deleteById(id);
+    }
+
+    // 🔹 Nuevo método
+    @Override
+    public List<SubEspecialidadResponseDTO> listarPorEspecialidad(Integer idEspecialidad) {
+        List<SubEspecialidad> lista = subEspecialidadRepository.findByEspecialidad_IdEspecialidad(idEspecialidad);
+        return subEspecialidadMapper.toDTOList(lista);
     }
 }
