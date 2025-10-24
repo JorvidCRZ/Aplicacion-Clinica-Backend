@@ -14,5 +14,7 @@ public class EspecialidadResponseDTO {
     private Integer idEspecialidad;
     private String nombre;
     private String descripcion;
-    private String urlImg;
+    private String urlImgIcono;
+    private String urlImgPort;
+    private String descripcionPortada;
 }

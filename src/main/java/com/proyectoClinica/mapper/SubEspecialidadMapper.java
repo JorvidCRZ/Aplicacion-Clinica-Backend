@@ -7,12 +7,12 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { EspecialidadMapper.class })
 public interface SubEspecialidadMapper {
 
-    SubEspecialidadResponseDTO toDTO (SubEspecialidad subEspecialidad);
+    SubEspecialidadResponseDTO toDTO(SubEspecialidad subEspecialidad);
 
-    List<SubEspecialidadResponseDTO> toDTOList (List<SubEspecialidad> subEspecialidades);
+    List<SubEspecialidadResponseDTO> toDTOList(List<SubEspecialidad> subEspecialidades);
 
-    SubEspecialidad toEntity (SubEspecialidadRequestDTO dto);
+    SubEspecialidad toEntity(SubEspecialidadRequestDTO dto);
 }

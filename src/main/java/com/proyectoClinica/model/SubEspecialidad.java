@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "sub_especialidad")
+@Table(name = "sub_especialidades")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,6 +34,6 @@ public class SubEspecialidad {
     @Column(name = "url_img")
     private String urlImg;
 
-    @Column(name = "precio_subespecialidad")
+    @Column(name = "precio_subespecial")
     private BigDecimal precioSubespecial;
 }
