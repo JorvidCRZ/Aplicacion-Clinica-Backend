@@ -2,9 +2,9 @@ package com.proyectoClinica.repository;
 
 import com.proyectoClinica.model.HistorialAcceso;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.stereotype.Repository;
 
-@RepositoryRestResource(path = "historial-acceso")
+@Repository
 public interface HistorialAccesoRepository extends JpaRepository<HistorialAcceso, Integer> {
 }
 

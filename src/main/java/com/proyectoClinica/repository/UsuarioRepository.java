@@ -2,9 +2,9 @@ package com.proyectoClinica.repository;
 
 import com.proyectoClinica.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.stereotype.Repository;
 
-@RepositoryRestResource(path = "usuario")
+@Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
 	java.util.Optional<Usuario> findByPersona_IdPersona(Integer idPersona);

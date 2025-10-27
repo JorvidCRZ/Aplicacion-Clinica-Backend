@@ -2,8 +2,8 @@ package com.proyectoClinica.repository;
 
 import com.proyectoClinica.model.Medico;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.stereotype.Repository;
 
-@RepositoryRestResource(path = "medico")
+@Repository
 public interface MedicoRepository extends JpaRepository<Medico, Integer> {
 }

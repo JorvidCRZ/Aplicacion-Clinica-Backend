@@ -2,8 +2,8 @@ package com.proyectoClinica.repository;
 
 import com.proyectoClinica.model.HistorialMedico;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.stereotype.Repository;
 
-@RepositoryRestResource(path = "historial-medico")
+@Repository
 public interface HistorialMedicoRepository extends JpaRepository<HistorialMedico, Integer> {
 }

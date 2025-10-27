@@ -2,11 +2,11 @@ package com.proyectoClinica.repository;
 
 import com.proyectoClinica.model.DisponibilidadMedico;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@RepositoryRestResource(path = "disponibilidad-medico")
+@Repository
 public interface DisponibilidadMedicoRepository extends JpaRepository<DisponibilidadMedico, Integer> {
 
     // Queries using the nested Medico property. Medico entity uses field 'idMedico',
