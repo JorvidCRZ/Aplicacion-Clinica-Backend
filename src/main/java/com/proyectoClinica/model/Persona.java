@@ -21,18 +21,45 @@ public class Persona {
     @Column(name = "id_persona")
     private Integer idPersona;
 
-    @Column(nullable = false, length = 100)
-    private String nombre;
+    @Column(name = "tipo_documento", length = 20)
+    private String tipoDocumento;
 
-    @Column(nullable = false, length = 100)
-    private String apellido;
-
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(name = "dni", nullable = false, unique = true, length = 20)
     private String dni;
+
+    @Column(name = "nombre1", nullable = false, length = 100)
+    private String nombre1;
+
+    @Column(name = "nombre2", length = 100)
+    private String nombre2;
+
+    @Column(name = "apellido_paterno", nullable = false, length = 100)
+    private String apellidoPaterno;
+
+    @Column(name = "apellido_materno", nullable = false, length = 100)
+    private String apellidoMaterno;
 
     @Column(name = "fecha_nac")
     private LocalDate fechaNacimiento;
 
-    @Column(length = 20)
+    @Column(name = "genero", length = 20)
+    private String genero;
+
+    @Column(name = "pais", length = 100)
+    private String pais;
+
+    @Column(name = "departamento", length = 100)
+    private String departamento;
+
+    @Column(name = "provincia", length = 100)
+    private String provincia;
+
+    @Column(name = "distrito", length = 100)
+    private String distrito;
+
+    @Column(name = "direccion")
+    private String direccion;
+
+    @Column(name = "telefono", length = 20)
     private String telefono;
 }

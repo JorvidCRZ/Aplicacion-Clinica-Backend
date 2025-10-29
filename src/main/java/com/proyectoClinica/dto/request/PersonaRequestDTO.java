@@ -17,19 +17,38 @@ import java.time.LocalDate;
 @Builder
 public class PersonaRequestDTO {
 
-    @NotBlank(message = "El nombre es obligatorio")
-    @Size(min = 2, max = 50, message = "El nombre debe contener entre 2 y 50 caracteres")
-    private String nombre;
+    @NotBlank(message = "El tipo de documento es obligatorio")
+    private String tipoDocumento;
 
-    @NotBlank(message = "El apellido es obligatorio")
-    @Size(min = 2, max = 50, message = "El apellido debe contener entre 2 y 50 caracteres")
-    private String apellido;
+    @NotBlank(message = "El primer nombre es obligatorio")
+    @Size(min = 2, max = 50, message = "El primer nombre debe contener entre 2 y 50 caracteres")
+    private String nombre1;
 
-    @Pattern(regexp = "\\d{8}", message = "El dni debe contener 8 dígitos")
+    @Size(max = 50, message = "El segundo nombre no debe superar los 50 caracteres")
+    private String nombre2;
+
+    @NotBlank(message = "El apellido paterno es obligatorio")
+    @Size(min = 2, max = 50, message = "El apellido paterno debe contener entre 2 y 50 caracteres")
+    private String apellidoPaterno;
+
+    @NotBlank(message = "El apellido materno es obligatorio")
+    @Size(min = 2, max = 50, message = "El apellido materno debe contener entre 2 y 50 caracteres")
+    private String apellidoMaterno;
+
+    @Pattern(regexp = "\\d{8}", message = "El DNI debe contener 8 dígitos")
     private String dni;
 
-    @Past(message = "La fecha de nacimiento tiene que ser pasado")
+    @Past(message = "La fecha de nacimiento debe ser una fecha pasada")
     private LocalDate fechaNacimiento;
+
+    private String genero;
+    private String pais;
+    private String departamento;
+    private String provincia;
+    private String distrito;
+
+    @Size(max = 255, message = "La dirección no debe exceder los 255 caracteres")
+    private String direccion;
 
     @Pattern(regexp = "^[0-9+ ]{9,12}$", message = "El teléfono debe contener entre 9 y 12 caracteres numéricos")
     private String telefono;

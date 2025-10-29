@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UsuarioResponseDTO {
-
     private Integer idUsuario;
     private PersonaResponseDTO persona;
     private String correo;

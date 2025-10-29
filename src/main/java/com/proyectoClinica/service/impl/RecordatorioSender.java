@@ -65,9 +65,13 @@ public class RecordatorioSender {
                         && r.getCita().getDetalleCita().getMedicoEspecialidad().getMedico() != null
                         && r.getCita().getDetalleCita().getMedicoEspecialidad().getMedico().getPersona() != null) {
                     html.append("<li><strong>Médico:</strong> ")
-                            .append(r.getCita().getDetalleCita().getMedicoEspecialidad().getMedico().getPersona().getNombre())
+                            .append(r.getCita().getDetalleCita().getMedicoEspecialidad().getMedico().getPersona().getNombre1())
                             .append(" ")
-                            .append(r.getCita().getDetalleCita().getMedicoEspecialidad().getMedico().getPersona().getApellido())
+                            .append(r.getCita().getDetalleCita().getMedicoEspecialidad().getMedico().getPersona().getNombre2())
+                            .append(" ")
+                            .append(r.getCita().getDetalleCita().getMedicoEspecialidad().getMedico().getPersona().getApellidoPaterno())
+                            .append(" ")
+                            .append(r.getCita().getDetalleCita().getMedicoEspecialidad().getMedico().getPersona().getApellidoMaterno())
                             .append("</li>");
                 }
                 html.append("<li><strong>Motivo:</strong> ")

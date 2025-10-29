@@ -8,14 +8,14 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {PersonaMapper.class, RolMapper.class})
 public interface UsuarioMapper {
 
     UsuarioResponseDTO toDTO (Usuario usuario);
 
     List<UsuarioResponseDTO> toDTOList (List<Usuario> usuarios);
 
-    @Mapping(source = "idPersona", target = "persona.idPersona")
+    @Mapping(source = "persona", target = "persona")
     @Mapping(source = "idRol", target = "rol.idRol")
     @Mapping(target = "idUsuario", ignore = true)
     Usuario toEntity (UsuarioRequestDTO dto);

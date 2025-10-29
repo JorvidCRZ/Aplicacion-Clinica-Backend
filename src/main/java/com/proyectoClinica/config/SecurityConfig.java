@@ -21,24 +21,17 @@ public class SecurityConfig {
     http
         // Habilita CORS (usa el CorsConfigurationSource declarado más abajo)
         .cors(Customizer.withDefaults())
-
         // Para API REST suele deshabilitarse CSRF (si usas cookies/session, revísalo)
         .csrf(csrf -> csrf.disable())
-
         .authorizeHttpRequests(auth -> auth
-                        // permitir lectura pública de especialidades y subespecialidades
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/especialidades/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/subespecialidades/**").permitAll()
-
-                        // permitir POST al endpoint de contactos (formulario público)
                         .requestMatchers(HttpMethod.POST, "/contactos").permitAll()
-                        // opcional: permitir todos los métodos para /contactos
                         // .requestMatchers("/contactos", "/contactos/**").permitAll()
-
                         // permitir preflight OPTIONS
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                        // el resto requiere autenticación
                         .anyRequest().authenticated())
 
                 // Mantén httpBasic solo si lo necesitas; en producción probablemente usarás
@@ -56,12 +49,7 @@ public class SecurityConfig {
         // En desarrollo incluye los orígenes desde los que servirás el front.
         // Añade 127.0.0.1 si arrancas el front con esa IP, o el dominio de producción
         // cuando lo despliegues.
-        config.setAllowedOrigins(List.of(
-                "http://localhost:4200",
-                "http://127.0.0.1:4200",
-                "http://localhost:5173" // ejemplo si usas otro dev server
-        ));
-
+        config.setAllowedOrigins(List.of("http://localhost:4200"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true); // si usas cookies/sesión; si no, poner false

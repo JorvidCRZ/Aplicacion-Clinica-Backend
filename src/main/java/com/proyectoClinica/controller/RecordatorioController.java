@@ -45,7 +45,6 @@ public class RecordatorioController {
         return ResponseEntity.noContent().build();
     }
 
-    // Endpoint para forzar el envío inmediato (útil para debug/reintento)
     @PostMapping("/{id}/send")
     public ResponseEntity<java.util.Map<String, Object>> enviarAhora(@PathVariable Integer id) {
         java.util.Map<String, Object> body = new java.util.HashMap<>();

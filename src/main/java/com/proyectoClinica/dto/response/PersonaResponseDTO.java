@@ -14,9 +14,18 @@ import java.time.LocalDate;
 public class PersonaResponseDTO {
 
     private Integer idPersona;
-    private String nombre;
-    private String apellido;
+    private String tipoDocumento;
+    private String nombre1;
+    private String nombre2;
+    private String apellidoPaterno;
+    private String apellidoMaterno;
     private String dni;
     private LocalDate fechaNacimiento;
+    private String genero;
+    private String pais;
+    private String departamento;
+    private String provincia;
+    private String distrito;
     private String telefono;
+    private String direccion;
 }

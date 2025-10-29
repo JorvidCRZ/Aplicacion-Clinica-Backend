@@ -11,4 +11,5 @@ public interface UsuarioService {
     UsuarioResponseDTO obtenerPorId(Integer id);
     List<UsuarioResponseDTO> listar();
     void eliminar(Integer id);
+
 }
