@@ -2,6 +2,8 @@ package com.proyectoClinica.controller;
 
 import com.proyectoClinica.dto.request.PacienteRequestDTO;
 import com.proyectoClinica.dto.response.PacienteResponseDTO;
+import com.proyectoClinica.mapper.PacienteMapper;
+import com.proyectoClinica.model.Paciente;
 import com.proyectoClinica.service.PacienteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +18,17 @@ import java.util.List;
 public class PacienteController {
 
     private final PacienteService pacienteService;
+    private final PacienteMapper pacienteMapper;
 
     @GetMapping
     public ResponseEntity<List<PacienteResponseDTO>> listar(){
         return ResponseEntity.ok(pacienteService.listar());
+    }
+
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<PacienteResponseDTO> obtenerPorUsuarioId(@PathVariable Integer idUsuario) {
+        PacienteResponseDTO pacienteDTO = pacienteService.obtenerPorUsuarioId(idUsuario);
+        return ResponseEntity.ok(pacienteDTO);
     }
 
     @GetMapping("/{id}")
@@ -30,6 +39,13 @@ public class PacienteController {
     @PostMapping
     public ResponseEntity<PacienteResponseDTO> crear(@Valid @RequestBody PacienteRequestDTO requestDTO){
         return ResponseEntity.ok(pacienteService.crear(requestDTO));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PacienteResponseDTO> actualizar(
+            @PathVariable Integer id,
+            @Valid @RequestBody PacienteRequestDTO requestDTO) {
+        return ResponseEntity.ok(pacienteService.actualizar(id, requestDTO));
     }
 
     @DeleteMapping("/{id}")

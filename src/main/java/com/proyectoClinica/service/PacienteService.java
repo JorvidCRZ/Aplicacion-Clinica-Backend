@@ -10,6 +10,7 @@ public interface PacienteService {
     PacienteResponseDTO crear(PacienteRequestDTO requestDTO);
     PacienteResponseDTO obtenerPorId(Integer id);
     List<PacienteResponseDTO> listar();
+    PacienteResponseDTO actualizar(Integer id, PacienteRequestDTO dto);
+    PacienteResponseDTO obtenerPorUsuarioId(Integer idUsuario);
     void eliminar(Integer id);
-
 }

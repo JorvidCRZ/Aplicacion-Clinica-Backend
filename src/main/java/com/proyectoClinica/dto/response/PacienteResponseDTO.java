@@ -14,4 +14,10 @@ public class PacienteResponseDTO {
     private Integer idPaciente;
     private PersonaResponseDTO persona;
     private UsuarioResponseDTO usuarioAgrego;
+    private String tipoSangre;
+    private Double peso;
+    private Double altura;
+    private String contactoEmergenciaNombre;
+    private String contactoEmergenciaRelacion;
+    private String contactoEmergenciaTelefono;
 }

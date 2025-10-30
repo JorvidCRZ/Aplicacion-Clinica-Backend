@@ -1,5 +1,6 @@
 package com.proyectoClinica.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,8 +20,9 @@ public class Usuario {
     @Column(name = "id_usuario")
     private Integer idUsuario;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_persona", nullable = false)
+    @JsonManagedReference
     private Persona persona;
 
     @Column(nullable = false, unique = true, length = 100)

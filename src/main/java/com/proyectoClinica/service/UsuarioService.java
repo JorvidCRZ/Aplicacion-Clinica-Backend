@@ -1,5 +1,6 @@
 package com.proyectoClinica.service;
 
+import com.proyectoClinica.dto.request.UsuarioEditRequestDTO;
 import com.proyectoClinica.dto.request.UsuarioRequestDTO;
 import com.proyectoClinica.dto.response.UsuarioResponseDTO;
 
@@ -12,4 +13,5 @@ public interface UsuarioService {
     List<UsuarioResponseDTO> listar();
     void eliminar(Integer id);
 
+    UsuarioResponseDTO actualizarCorreo(UsuarioEditRequestDTO requestDTO);
 }

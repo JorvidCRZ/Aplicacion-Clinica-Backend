@@ -1,14 +1,18 @@
 package com.proyectoClinica.service.impl;
 
+import com.proyectoClinica.dto.request.UsuarioEditRequestDTO;
 import com.proyectoClinica.dto.request.UsuarioRequestDTO;
 import com.proyectoClinica.dto.response.UsuarioResponseDTO;
 import com.proyectoClinica.mapper.PersonaMapper;
 import com.proyectoClinica.mapper.UsuarioMapper;
+import com.proyectoClinica.model.Paciente;
 import com.proyectoClinica.model.Persona;
 import com.proyectoClinica.model.Usuario;
+import com.proyectoClinica.repository.PacienteRepository;
 import com.proyectoClinica.repository.PersonaRepository;
 import com.proyectoClinica.repository.UsuarioRepository;
 import com.proyectoClinica.service.UsuarioService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.proyectoClinica.repository.RecordatorioRepository;
 import org.springframework.stereotype.Service;
@@ -25,6 +29,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     private final PersonaMapper personaMapper;
     private final RecordatorioRepository recordatorioRepository;
     private final RecordatorioSender recordatorioSender;
+    private final PacienteRepository pacienteRepository;
 
     @Override
     public UsuarioResponseDTO crear(UsuarioRequestDTO requestDTO) {
@@ -34,6 +39,18 @@ public class UsuarioServiceImpl implements UsuarioService {
         Usuario usuario = usuarioMapper.toEntity(requestDTO);
         usuario.setPersona(personaGuardada);
         Usuario guardado = usuarioRepository.save(usuario);
+
+        if (guardado.getRol() != null && guardado.getRol().getIdRol() == 3) {
+            boolean existePaciente = pacienteRepository.existsByPersonaIdPersona(personaGuardada.getIdPersona());
+            if (!existePaciente) {
+                Paciente paciente = new Paciente();
+                paciente.setPersona(personaGuardada);
+                // Puedes usar el mismo usuario como quien lo agregó
+                paciente.setUsuarioAgrego(guardado);
+                pacienteRepository.save(paciente);
+            }
+        }
+
         // Tras crear el usuario, backfill recordatorios pendientes que no tienen destinatario
         try {
             if (personaGuardada.getIdPersona() != null) {
@@ -69,8 +86,21 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioMapper.toDTOList(usuarioRepository.findAll());
     }
 
+
     @Override
     public void eliminar(Integer id) {
         usuarioRepository.deleteById(id);
     }
+
+    @Override
+    public UsuarioResponseDTO actualizarCorreo(UsuarioEditRequestDTO dto) {
+        Usuario usuario = usuarioRepository.findById(dto.getIdUsuario())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + dto.getIdUsuario()));
+
+        usuario.setCorreo(dto.getCorreo());
+        Usuario guardado = usuarioRepository.save(usuario);
+
+        return usuarioMapper.toDTO(guardado);
+    }
+
 }

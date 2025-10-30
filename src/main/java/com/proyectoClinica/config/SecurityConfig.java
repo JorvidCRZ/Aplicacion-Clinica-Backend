@@ -25,6 +25,7 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/pacientes/**").permitAll()
                         .requestMatchers("/usuarios/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/especialidades/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/subespecialidades/**").permitAll()

@@ -1,5 +1,6 @@
 package com.proyectoClinica.controller;
 
+import com.proyectoClinica.dto.request.UsuarioEditRequestDTO;
 import com.proyectoClinica.dto.request.UsuarioRequestDTO;
 import com.proyectoClinica.dto.response.UsuarioResponseDTO;
 import com.proyectoClinica.service.UsuarioService;
@@ -36,5 +37,12 @@ public class UsuarioController {
     public ResponseEntity<Void> eliminar(@PathVariable Integer id){
         usuarioService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/actualizar-correo")
+    public ResponseEntity<UsuarioResponseDTO> actualizarCorreo(
+            @Valid @RequestBody UsuarioEditRequestDTO requestDTO) {
+        UsuarioResponseDTO actualizado = usuarioService.actualizarCorreo(requestDTO);
+        return ResponseEntity.ok(actualizado);
     }
 }

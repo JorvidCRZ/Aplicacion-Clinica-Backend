@@ -12,11 +12,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class PacienteRequestDTO {
+        @NotNull(message = "El idPersona es obligatorio")
+        @Positive(message = "El idPersona debe ser positivo")
+        private Integer idPersona;
 
-    @NotNull(message = "El idPersona es obligatorio")
-    @Positive(message = "El IdPersona debe ser positivo")
-    private Integer idPersona;
-
-    @Positive(message = "El usuarioAgrego debe ser un número valido")
-    private Integer usuarioAgrego;
-}
+        private String tipoSangre;
+        private Double peso;
+        private Double altura;
+        private String contactoEmergenciaNombre;
+        private String contactoEmergenciaRelacion;
+        private String contactoEmergenciaTelefono;
+       private PersonaRequestDTO persona;
+       private UsuarioEditRequestDTO usuarioAgrego;
+    }

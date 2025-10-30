@@ -1,5 +1,6 @@
 package com.proyectoClinica.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -62,4 +63,8 @@ public class Persona {
 
     @Column(name = "telefono", length = 20)
     private String telefono;
+
+    @OneToOne(mappedBy = "persona")
+    @JsonBackReference
+    private Usuario usuario;
 }
