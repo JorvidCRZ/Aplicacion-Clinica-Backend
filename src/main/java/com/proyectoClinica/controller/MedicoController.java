@@ -1,6 +1,7 @@
 package com.proyectoClinica.controller;
 
 import com.proyectoClinica.dto.request.MedicoRequestDTO;
+import com.proyectoClinica.dto.response.MedicoListadoResponseDTO;
 import com.proyectoClinica.dto.response.MedicoResponseDTO;
 import com.proyectoClinica.service.MedicoService;
 import jakarta.validation.Valid;
@@ -41,10 +42,6 @@ public class MedicoController {
     }
 
 
-
-
-    
-
     @GetMapping("/{id}/perfil")
     public ResponseEntity<Map<String,Object>> obtenerPerfil(@PathVariable Integer id) {
         MedicoResponseDTO dto = medicoService.obtenerPorId(id);
@@ -53,6 +50,11 @@ public class MedicoController {
         body.put("data", dto);
         return ResponseEntity.ok(body);
     }
+    @GetMapping("/detalle")
+    public ResponseEntity<List<MedicoListadoResponseDTO>> listarDetalle() {
+        return ResponseEntity.ok(medicoService.listarMedicosDetalle());
+    }
+
 
     // ejemplo: endpoint para las citas del medico (implementa MedicoService)
     /*@GetMapping("/{id}/citas")

@@ -1,6 +1,7 @@
 package com.proyectoClinica.service.impl;
 
 import com.proyectoClinica.dto.request.PacienteRequestDTO;
+import com.proyectoClinica.dto.response.PacienteListadoResponseDTO;
 import com.proyectoClinica.dto.response.PacienteResponseDTO;
 import com.proyectoClinica.mapper.PacienteMapper;
 import com.proyectoClinica.model.Paciente;
@@ -101,7 +102,27 @@ public class PacienteServiceImpl implements PacienteService {
     }
 
     @Override
+    public List<PacienteListadoResponseDTO> listarPacientesDetalle() {
+        return pacienteRepository.listarPacientesDetalle()
+                .stream()
+                .map(row -> PacienteListadoResponseDTO.builder()
+                        .id(((Number) row.get("id")).longValue())
+                        .nombreCompleto((String) row.get("nombreCompleto"))
+                        .email((String) row.get("email"))
+                        .telefono((String) row.get("telefono"))
+                        .tipoDocumento((String) row.get("tipoDocumento"))
+                        .numeroDocumento((String) row.get("numeroDocumento"))
+                        .fechaNacimiento(String.valueOf(row.get("fechaNacimiento")))
+                        .genero((String) row.get("genero"))
+                        .build())
+                .toList();
+    }
+
+
+
+    @Override
     public void eliminar(Integer id) {
         pacienteRepository.deleteById(id);
     }
+
 }

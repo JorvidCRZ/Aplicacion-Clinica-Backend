@@ -1,6 +1,7 @@
 package com.proyectoClinica.controller;
 
 import com.proyectoClinica.dto.request.PacienteRequestDTO;
+import com.proyectoClinica.dto.response.PacienteListadoResponseDTO;
 import com.proyectoClinica.dto.response.PacienteResponseDTO;
 import com.proyectoClinica.mapper.PacienteMapper;
 import com.proyectoClinica.model.Paciente;
@@ -53,4 +54,9 @@ public class PacienteController {
         pacienteService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/detalle")
+    public ResponseEntity<List<PacienteListadoResponseDTO>> listarPacientesDetalle() {
+        return ResponseEntity.ok(pacienteService.listarPacientesDetalle());
+    }
+
 }

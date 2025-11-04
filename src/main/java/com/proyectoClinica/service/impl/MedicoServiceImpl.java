@@ -1,6 +1,7 @@
 package com.proyectoClinica.service.impl;
 
 import com.proyectoClinica.dto.request.MedicoRequestDTO;
+import com.proyectoClinica.dto.response.MedicoListadoResponseDTO;
 import com.proyectoClinica.dto.response.MedicoResponseDTO;
 import com.proyectoClinica.mapper.MedicoMapper;
 import com.proyectoClinica.model.Persona;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -51,4 +53,24 @@ public class MedicoServiceImpl implements MedicoService {
     public void eliminar(Integer id) {
         medicoRepository.deleteById(id);
     }
+
+    @Override
+    public List<MedicoListadoResponseDTO> listarMedicosDetalle() {
+        List<Map<String, Object>> resultados = medicoRepository.listarMedicosDetalle();
+
+        return resultados.stream()
+                .map(row -> new MedicoListadoResponseDTO(
+                        ((Number) row.get("id")).longValue(),
+                        (String) row.get("nombre"),
+                        (String) row.get("apellidoPaterno"),
+                        (String) row.get("apellidoMaterno"),
+                        (String) row.get("email"),
+                        (String) row.get("especialidades"),
+                        (String) row.get("colegiatura"),
+                        (String) row.get("telefono"),
+                        (String) row.get("horario")
+                ))
+                .toList();
+    }
+
 }
