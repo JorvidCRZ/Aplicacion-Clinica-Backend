@@ -6,6 +6,7 @@ import com.proyectoClinica.model.Medico;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -30,25 +31,56 @@ public class ReporteMedicoPDFExporter {
             String fechaActual = ahora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             String horaActual = ahora.format(DateTimeFormatter.ofPattern("HH:mm"));
 
-            // Encabezado principal
-            Paragraph encabezado = new Paragraph("CLÍNICA TU SALUD", fontTitulo);
-            encabezado.setAlignment(Element.ALIGN_CENTER);
-            document.add(encabezado);
+            // Encabezado con logo
+            PdfPTable encabezadoTabla = new PdfPTable(2);
+            encabezadoTabla.setWidthPercentage(100);
+            encabezadoTabla.setWidths(new float[]{1f, 4f});
+
+            Image logo = null;
+            try (InputStream logoStream = getClass().getResourceAsStream("/static/images/logo.png")) {
+                if (logoStream != null) {
+                    logo = Image.getInstance(logoStream.readAllBytes());
+                    logo.scaleToFit(90, 90); // tamaño profesional ajustado
+                    logo.setAlignment(Element.ALIGN_LEFT);
+                }
+            }
+
+            PdfPCell logoCell = new PdfPCell();
+            if (logo != null) {
+                logoCell.addElement(logo);
+            }
+            logoCell.setBorder(Rectangle.NO_BORDER);
+            logoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            encabezadoTabla.addCell(logoCell);
+
+            // Encabezado
+            PdfPCell textoEncabezado = new PdfPCell();
+            textoEncabezado.setBorder(Rectangle.NO_BORDER);
+            textoEncabezado.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+            Paragraph titulo = new Paragraph("CLÍNICA TU SALUD", fontTitulo);
+            titulo.setAlignment(Element.ALIGN_CENTER);
 
             Paragraph subtitulo = new Paragraph("Reporte de Médicos", fontSubtitulo);
             subtitulo.setAlignment(Element.ALIGN_CENTER);
-            document.add(subtitulo);
 
             Paragraph fechaParrafo = new Paragraph("Fecha: " + fechaActual, fontContenido);
             fechaParrafo.setAlignment(Element.ALIGN_RIGHT);
-            document.add(fechaParrafo);
 
             Paragraph horaParrafo = new Paragraph("Hora: " + horaActual, fontContenido);
             horaParrafo.setAlignment(Element.ALIGN_RIGHT);
-            document.add(horaParrafo);
+
+            textoEncabezado.addElement(titulo);
+            textoEncabezado.addElement(subtitulo);
+            textoEncabezado.addElement(fechaParrafo);
+            textoEncabezado.addElement(horaParrafo);
+
+            encabezadoTabla.addCell(textoEncabezado);
+            document.add(encabezadoTabla);
 
             document.add(Chunk.NEWLINE);
 
+            // Tabla de datos
             PdfPTable tabla = new PdfPTable(8);
             tabla.setWidthPercentage(100);
             tabla.setWidths(new float[]{1, 3, 2, 2, 2, 3, 2, 2});
@@ -99,15 +131,6 @@ public class ReporteMedicoPDFExporter {
         } catch (Exception e) {
             throw new RuntimeException("Error al generar el reporte PDF de médicos: " + e.getMessage(), e);
         }
-    }
-
-    // Celda de encabezado
-    private void agregarCeldaEncabezado(PdfPTable tabla, String texto) {
-        PdfPCell celda = new PdfPCell(new Phrase(texto, new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.WHITE)));
-        celda.setBackgroundColor(new BaseColor(0, 102, 204)); // Azul profesional
-        celda.setHorizontalAlignment(Element.ALIGN_CENTER);
-        celda.setPadding(6);
-        tabla.addCell(celda);
     }
 
     // Celda del cuerpo

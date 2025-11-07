@@ -4,10 +4,13 @@ import com.proyectoClinica.model.Paciente;
 import com.proyectoClinica.model.Persona;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -22,13 +25,12 @@ public class ReporteExcelExporter {
 
             Sheet sheet = workbook.createSheet("Reporte de Pacientes");
 
-            // Ajustar anchos de columnas solo para las usadas
             int[] widths = {1500, 4500, 4500, 2500, 3000, 3000, 2000, 3000, 3500, 4500, 6000, 2500};
             for (int i = 0; i < widths.length; i++) {
                 sheet.setColumnWidth(i, widths[i]);
             }
 
-            // Ocultar líneas de cuadrícula para que se vea limpio
+            // Ocultar líneas de cuadrícula
             sheet.setDisplayGridlines(false);
 
             // Reducir márgenes
@@ -67,6 +69,7 @@ public class ReporteExcelExporter {
             styleHeader.setBorderRight(BorderStyle.THIN);
 
             CellStyle styleBody = workbook.createCellStyle();
+            styleBody.setAlignment(HorizontalAlignment.CENTER);
             styleBody.setVerticalAlignment(VerticalAlignment.CENTER);
             styleBody.setBorderTop(BorderStyle.THIN);
             styleBody.setBorderBottom(BorderStyle.THIN);
@@ -74,8 +77,32 @@ public class ReporteExcelExporter {
             styleBody.setBorderRight(BorderStyle.THIN);
             styleBody.setWrapText(true);
 
+            CellStyle styleFechaHora = workbook.createCellStyle();
+            Font fontFechaHora = workbook.createFont();
+            fontFechaHora.setFontHeightInPoints((short) 10);
+            styleFechaHora.setFont(fontFechaHora);
+            styleFechaHora.setAlignment(HorizontalAlignment.RIGHT);
+
             // Encabezado principal
             int rowNum = 0;
+
+            // === Inserción del LOGO ===
+            try (InputStream is = new FileInputStream("src/main/resources/static/images/logo.png")) {
+                byte[] bytes = IOUtils.toByteArray(is);
+                int pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_PNG);
+                CreationHelper helper = workbook.getCreationHelper();
+                Drawing<?> drawing = sheet.createDrawingPatriarch();
+                ClientAnchor anchor = helper.createClientAnchor();
+                anchor.setCol1(1);
+                anchor.setRow1(1);
+                anchor.setCol2(2);
+                anchor.setRow2(3);
+                Picture pict = drawing.createPicture(anchor, pictureIdx);
+                pict.resize(1);
+            } catch (Exception e) {
+                System.err.println("No se pudo cargar el logo: " + e.getMessage());
+            }
+
             Row rowTitulo = sheet.createRow(rowNum++);
             Cell cellTitulo = rowTitulo.createCell(0);
             cellTitulo.setCellValue("CLÍNICA TU SALUD");
@@ -88,21 +115,29 @@ public class ReporteExcelExporter {
             cellSubtitulo.setCellStyle(styleSubtitulo);
             sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, 11));
 
+            // Fecha y hora
             LocalDateTime ahora = LocalDateTime.now();
             DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm");
 
             Row rowFecha = sheet.createRow(rowNum++);
-            rowFecha.createCell(10).setCellValue("Fecha: " + ahora.format(formatoFecha));
-            rowFecha.createCell(11).setCellValue("Hora: " + ahora.format(formatoHora));
+            Cell cellFecha = rowFecha.createCell(11);
+            cellFecha.setCellValue("Fecha: " + ahora.format(formatoFecha));
+            cellFecha.setCellStyle(styleFechaHora);
 
-            rowNum++; // Espacio
+            Row rowHora = sheet.createRow(rowNum++);
+            Cell cellHora = rowHora.createCell(11);
+            cellHora.setCellValue("Hora: " + ahora.format(formatoHora));
+            cellHora.setCellStyle(styleFechaHora);
+
+            rowNum++; // Espacio visual
 
             // Encabezados de tabla
             String[] headers = {
                     "ID", "Nombre", "Apellido", "Tipo Doc", "DNI", "Fecha Nac.",
                     "Edad", "Género", "Teléfono", "Correo", "Dirección", "Estado"
             };
+
             Row headerRow = sheet.createRow(rowNum++);
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
@@ -139,14 +174,14 @@ public class ReporteExcelExporter {
                 }
             }
 
-            // Definir el área visible
+            // Área visible
             int ultimaFila = rowNum - 1;
             workbook.setPrintArea(
                     workbook.getSheetIndex(sheet),
                     0,
                     headers.length - 1,
-                    0, // fila inicial
-                    ultimaFila // fila final
+                    0,
+                    ultimaFila
             );
 
             sheet.getPrintSetup().setFitWidth((short) 1);

@@ -7,6 +7,7 @@ import com.proyectoClinica.model.Persona;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -23,42 +24,70 @@ public class ReportePDFExporter {
             PdfWriter.getInstance(document, baos);
             document.open();
 
-            // 🔹 Fuentes
+            // Fuentes
             Font fontTitulo = new Font(Font.FontFamily.HELVETICA, 16, Font.BOLD);
             Font fontSubtitulo = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
             Font fontContenido = new Font(Font.FontFamily.HELVETICA, 9);
 
-            // 🔹 Fecha y hora actual
+            // Fecha y hora
             LocalDateTime ahora = LocalDateTime.now();
             String fechaActual = ahora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             String horaActual = ahora.format(DateTimeFormatter.ofPattern("HH:mm"));
 
-            // 🔹 Encabezado principal
-            Paragraph encabezado = new Paragraph("CLÍNICA TU SALUD", fontTitulo);
-            encabezado.setAlignment(Element.ALIGN_CENTER);
-            document.add(encabezado);
+            PdfPTable encabezadoTabla = new PdfPTable(2);
+            encabezadoTabla.setWidthPercentage(100);
+            encabezadoTabla.setWidths(new float[]{1f, 4f});
+
+            Image logo = null;
+            try (InputStream logoStream = getClass().getResourceAsStream("/static/images/logo.png")) {
+                if (logoStream != null) {
+                    logo = Image.getInstance(logoStream.readAllBytes());
+                    logo.scaleToFit(90, 90);
+                    logo.setAlignment(Element.ALIGN_LEFT);
+                }
+            }
+
+            PdfPCell logoCell = new PdfPCell();
+            if (logo != null) logoCell.addElement(logo);
+            logoCell.setBorder(Rectangle.NO_BORDER);
+            logoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            encabezadoTabla.addCell(logoCell);
+
+            PdfPCell textoEncabezado = new PdfPCell();
+            textoEncabezado.setBorder(Rectangle.NO_BORDER);
+            textoEncabezado.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+            Paragraph titulo = new Paragraph("CLÍNICA TU SALUD", fontTitulo);
+            titulo.setAlignment(Element.ALIGN_CENTER);
 
             Paragraph subtitulo = new Paragraph("Reporte de Pacientes", fontSubtitulo);
             subtitulo.setAlignment(Element.ALIGN_CENTER);
-            document.add(subtitulo);
 
             Paragraph fechaParrafo = new Paragraph("Fecha: " + fechaActual, fontContenido);
             fechaParrafo.setAlignment(Element.ALIGN_RIGHT);
-            document.add(fechaParrafo);
 
             Paragraph horaParrafo = new Paragraph("Hora: " + horaActual, fontContenido);
             horaParrafo.setAlignment(Element.ALIGN_RIGHT);
-            document.add(horaParrafo);
+
+            textoEncabezado.addElement(titulo);
+            textoEncabezado.addElement(subtitulo);
+            textoEncabezado.addElement(fechaParrafo);
+            textoEncabezado.addElement(horaParrafo);
+
+            encabezadoTabla.addCell(textoEncabezado);
+            document.add(encabezadoTabla);
 
             document.add(Chunk.NEWLINE);
 
+            // Tabla de datos
             PdfPTable table = new PdfPTable(12);
             table.setWidthPercentage(100);
             table.setWidths(new float[]{1.2f, 4f, 4f, 2f, 3f, 3.5f, 1.9f, 3.2f, 3.8f, 5.5f, 5.5f, 2.5f});
 
-            // Encabezado
-            Font headerFont = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD, BaseColor.WHITE);
-            BaseColor headerColor = new BaseColor(0, 102, 204); // Azul elegante
+            // Encabezados
+            Font headerFont = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE);
+            BaseColor headerColor = new BaseColor(0, 102, 204);
+
             String[] headers = {
                     "ID", "Nombre", "Apellido", "Tipo Doc", "DNI", "Fecha Nac.",
                     "Edad", "Género", "Teléfono", "Correo", "Dirección", "Estado"
@@ -105,7 +134,7 @@ public class ReportePDFExporter {
         }
     }
 
-    // 🔹 Método reutilizable para celdas del cuerpo
+    // Celdas del cuerpo
     private void agregarCelda(PdfPTable tabla, String texto, Font font) {
         PdfPCell celda = new PdfPCell(new Phrase(texto != null ? texto : "—", font));
         celda.setHorizontalAlignment(Element.ALIGN_CENTER);
