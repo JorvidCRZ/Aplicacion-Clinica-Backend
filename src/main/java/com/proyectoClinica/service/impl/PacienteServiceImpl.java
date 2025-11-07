@@ -117,9 +117,6 @@ public class PacienteServiceImpl implements PacienteService {
                         .build())
                 .toList();
     }
-
-
-
     @Override
     public void eliminar(Integer id) {
         pacienteRepository.deleteById(id);

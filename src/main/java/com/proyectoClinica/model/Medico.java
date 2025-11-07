@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "medico")
 @Data
@@ -29,4 +31,8 @@ public class Medico {
 
     @Column(name = "experiencia_anios")
     private Integer experienciaAnios;
+
+    @OneToMany(mappedBy = "medico", fetch = FetchType.LAZY)
+    private List<MedicoEspecialidad> especialidades;
+
 }

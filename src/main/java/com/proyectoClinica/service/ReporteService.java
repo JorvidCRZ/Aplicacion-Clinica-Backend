@@ -11,4 +11,10 @@ public interface ReporteService {
     ReporteResponseDTO obtenerPorId(Integer id);
     List<ReporteResponseDTO> listar();
     void eliminar(Integer id);
+
+    byte[] generarReportePacientesPDF();
+    byte[] generarReportePacientesExcel();
+
+    byte[] generarReporteMedicoPDF();
+    byte[] generarReporteMedicoExcel();
 }

@@ -33,6 +33,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/subespecialidades/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/contactos").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        .requestMatchers("/reportes/**").permitAll()
                         // El resto también se permite por ahora (para desarrollo)
                         .anyRequest().permitAll()
                 )
