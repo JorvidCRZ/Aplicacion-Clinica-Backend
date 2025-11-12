@@ -1,8 +1,10 @@
 package com.proyectoClinica.controller;
 
 import com.proyectoClinica.dto.request.MedicoRequestDTO;
+import com.proyectoClinica.dto.response.DisponibilidadMedicoResponseDTO;
 import com.proyectoClinica.dto.response.MedicoListadoResponseDTO;
 import com.proyectoClinica.dto.response.MedicoResponseDTO;
+import com.proyectoClinica.service.DisponibilidadMedicoService;
 import com.proyectoClinica.service.MedicoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -64,4 +66,34 @@ public class MedicoController {
         body.put("data", medicoService.listarCitas(id));
         return ResponseEntity.ok(body);
     }*/
+
+
+    private final DisponibilidadMedicoService disponibilidadMedicoService;
+
+
+    @GetMapping("/{idMedico}/disponibilidad")
+    public ResponseEntity<List<DisponibilidadMedicoResponseDTO>> obtenerDisponibilidadPorMedico(
+            @PathVariable Integer idMedico) {
+
+        List<DisponibilidadMedicoResponseDTO> disponibilidad =
+                disponibilidadMedicoService.obtenerDisponibilidadPorMedico(idMedico);
+
+        return ResponseEntity.ok(disponibilidad);
+    }
+
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<MedicoResponseDTO> obtenerMedicoPorUsuario(@PathVariable Integer idUsuario) {
+        MedicoResponseDTO dto = medicoService.obtenerPorUsuario(idUsuario);
+        return ResponseEntity.ok(dto);
+    }
+
+    // DELETE para eliminar un horario de disponibilidad por su ID
+    @DeleteMapping("/disponibilidad/{idDisponibilidad}")
+    public ResponseEntity<Void> eliminarDisponibilidad(@PathVariable Integer idDisponibilidad) {
+        disponibilidadMedicoService.eliminar(idDisponibilidad);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
 }

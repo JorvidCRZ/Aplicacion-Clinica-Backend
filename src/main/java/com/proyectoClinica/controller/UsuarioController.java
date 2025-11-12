@@ -45,4 +45,6 @@ public class UsuarioController {
         UsuarioResponseDTO actualizado = usuarioService.actualizarCorreo(requestDTO);
         return ResponseEntity.ok(actualizado);
     }
+
+
 }
