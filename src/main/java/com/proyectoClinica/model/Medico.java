@@ -17,6 +17,7 @@ import java.util.List;
 
 public class Medico {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_medico")
@@ -34,5 +35,9 @@ public class Medico {
 
     @OneToMany(mappedBy = "medico", fetch = FetchType.LAZY)
     private List<MedicoEspecialidad> especialidades;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario", nullable = false, unique = true)
+    private Usuario usuario;
 
 }
