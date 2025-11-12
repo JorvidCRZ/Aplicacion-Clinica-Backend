@@ -1,6 +1,7 @@
 package com.proyectoClinica.controller;
 
 import com.proyectoClinica.dto.request.PacienteRequestDTO;
+import com.proyectoClinica.dto.response.PacienteDashboardDTO;
 import com.proyectoClinica.dto.response.PacienteListadoResponseDTO;
 import com.proyectoClinica.dto.response.PacienteResponseDTO;
 import com.proyectoClinica.mapper.PacienteMapper;
@@ -58,5 +59,17 @@ public class PacienteController {
     public ResponseEntity<List<PacienteListadoResponseDTO>> listarPacientesDetalle() {
         return ResponseEntity.ok(pacienteService.listarPacientesDetalle());
     }
+
+
+
+    /*Tabla Pacientes en Dashboard Medico*/
+    @GetMapping("/tablapacientes/medico/{idMedico}")
+    public ResponseEntity<List<PacienteDashboardDTO>> listarPorMedico(
+            @PathVariable Integer idMedico
+    ) {
+        return ResponseEntity.ok(pacienteService.listarDashboardPorMedico(idMedico));
+    }
+
+
 
 }

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/citas")
 @RequiredArgsConstructor
@@ -37,4 +39,23 @@ public class CitaController {
         citaService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/hoy")
+    public ResponseEntity<List<CitaResponseDTO>> listarCitasHoy(){
+        return ResponseEntity.ok(citaService.listarCitasDeHoy());
+    }
+    /* numero de citas de medico , numero de citas del medico en este mes*/
+    @GetMapping("/medico/{idMedico}/totalcitas")
+    public ResponseEntity<Long> contarCitasPorMedico(@PathVariable Integer idMedico) {
+        long total = citaService.contarCitasPorMedico(idMedico);
+        return ResponseEntity.ok(total);
+    }
+
+    @GetMapping("/mes/total/{idMedico}")
+    public ResponseEntity<Long> contarCitasDelMesActualPorMedico(@PathVariable Long idMedico) {
+        long total = citaService.contarCitasDelMesActualPorMedico(idMedico);
+        return ResponseEntity.ok(total);
+    }
+
+
 }
