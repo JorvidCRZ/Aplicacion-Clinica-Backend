@@ -3,6 +3,7 @@ package com.proyectoClinica.repository;
 import com.proyectoClinica.model.Medico;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -34,4 +35,9 @@ public interface MedicoRepository extends JpaRepository<Medico, Integer> {
         ORDER BY p.apellido_paterno
         """, nativeQuery = true)
     List<Map<String, Object>> listarMedicosDetalle();
+
+
+    Medico findByUsuarioIdUsuario(Integer idUsuario);
+
+
 }

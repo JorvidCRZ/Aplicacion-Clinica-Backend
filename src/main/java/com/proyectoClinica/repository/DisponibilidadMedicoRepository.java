@@ -20,4 +20,7 @@ public interface DisponibilidadMedicoRepository extends JpaRepository<Disponibil
 
     // vigentes de un día
     List<DisponibilidadMedico> findByMedico_IdMedicoAndDiaSemanaAndVigenciaTrue(Integer idMedico, String diaSemana);
+
+
+
 }
