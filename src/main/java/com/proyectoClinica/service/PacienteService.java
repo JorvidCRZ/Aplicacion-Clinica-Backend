@@ -1,6 +1,7 @@
 package com.proyectoClinica.service;
 
 import com.proyectoClinica.dto.request.PacienteRequestDTO;
+import com.proyectoClinica.dto.response.PacienteDashboardDTO;
 import com.proyectoClinica.dto.response.PacienteResponseDTO;
 import com.proyectoClinica.dto.response.PacienteListadoResponseDTO;
 
@@ -16,4 +17,9 @@ public interface PacienteService {
     PacienteResponseDTO obtenerPorUsuarioId(Integer idUsuario);
     List<PacienteListadoResponseDTO> listarPacientesDetalle();
     void eliminar(Integer id);
+
+    /*Tabla Paciente en dashboard Medico*/
+    List<PacienteDashboardDTO> listarDashboardPorMedico(Integer idMedico);
+
+
 }
