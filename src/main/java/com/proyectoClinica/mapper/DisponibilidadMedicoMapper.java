@@ -11,12 +11,14 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {MedicoMapper.class})
 public interface DisponibilidadMedicoMapper {
 
-    DisponibilidadMedicoResponseDTO toDTO (DisponibilidadMedico disponibilidadMedico);
+    // Entity -> ResponseDTO
+    DisponibilidadMedicoResponseDTO toDTO(DisponibilidadMedico disponibilidadMedico);
 
-    List<DisponibilidadMedicoResponseDTO> toDTOList (List<DisponibilidadMedico> disponibilidadMedicos);
+    List<DisponibilidadMedicoResponseDTO> toDTOList(List<DisponibilidadMedico> disponibilidadMedicos);
 
-    @Mapping(target = "medico", ignore = true)
-    @Mapping(target = "duracionMinutos", ignore = true)
-    @Mapping(target = "idDisponibilidad", ignore = true)
-    DisponibilidadMedico toEntity (DisponibilidadMedicoRequestDTO dto);
+    // RequestDTO -> Entity
+    @Mapping(target = "idDisponibilidad", ignore = true) // autogenerado
+    @Mapping(target = "duracionMinutos", ignore = true)  // no viene en el dto
+    @Mapping(target = "medico.idMedico", source = "idMedico") // clave: mapea idMedico a medico.idMedico
+    DisponibilidadMedico toEntity(DisponibilidadMedicoRequestDTO dto);
 }
