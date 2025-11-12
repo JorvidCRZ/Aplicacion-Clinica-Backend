@@ -3,6 +3,7 @@ package com.proyectoClinica.repository;
 import com.proyectoClinica.model.Paciente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,5 +30,13 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
     ORDER BY pa.id_paciente
     """, nativeQuery = true)
     List<Map<String, Object>> listarPacientesDetalle();
+
+
+
+
+    /*mETODO PARA LLAMAR PACIENTES EN TABLA PACIENTES DASHBOARD MEDICO*/
+    @Query(value = "SELECT * FROM vista_pacientes_dashboard WHERE id_medico = :idMedico", nativeQuery = true)
+    List<Map<String, Object>> listarPacientesDashboardPorMedico(@Param("idMedico") Integer idMedico);
+
 
 }
