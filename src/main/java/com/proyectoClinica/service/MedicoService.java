@@ -13,7 +13,6 @@ public interface MedicoService {
     List<MedicoResponseDTO> listar();
     List<MedicoListadoResponseDTO> listarMedicosDetalle();
     void eliminar(Integer id);
-    MedicoResponseDTO obtenerPorUsuario(Integer idUsuario);
 
 
 }
