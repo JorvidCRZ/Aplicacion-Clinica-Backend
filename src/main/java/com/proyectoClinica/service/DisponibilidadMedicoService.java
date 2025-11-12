@@ -36,4 +36,6 @@ public interface DisponibilidadMedicoService {
 
     // Obtener slots disponibles para una disponibilidad y fecha (formato de fecha: YYYY-MM-DD)
     com.proyectoClinica.dto.response.SlotsDisponibilidadResponseDTO obtenerSlotsDisponibles(Integer idDisponibilidad, java.time.LocalDate fecha);
+
+    List<DisponibilidadMedicoResponseDTO> obtenerDisponibilidadPorMedico(Integer idMedico);
 }

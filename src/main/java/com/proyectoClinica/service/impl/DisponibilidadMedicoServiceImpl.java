@@ -322,4 +322,18 @@ public class DisponibilidadMedicoServiceImpl implements DisponibilidadMedicoServ
                 .slotsOcupados(slotsOcupados)
                 .build();
     }
+
+    @Override
+    public List<DisponibilidadMedicoResponseDTO> obtenerDisponibilidadPorMedico(Integer idMedico) {
+
+        Medico medico = medicoRepository.findById(idMedico)
+                .orElseThrow(() -> new RuntimeException("El médico no existe"));
+
+        List<DisponibilidadMedico> lista =
+                disponibilidadMedicoRepository.findByMedico_IdMedico(idMedico);
+
+        return lista.stream()
+                .map(disponibilidadMedicoMapper::toDTO)
+                .toList();
+    }
 }

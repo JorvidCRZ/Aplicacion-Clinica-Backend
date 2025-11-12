@@ -72,5 +72,19 @@ public class MedicoServiceImpl implements MedicoService {
                 ))
                 .toList();
     }
+    @Override
+    public MedicoResponseDTO obtenerPorUsuario(Integer idUsuario) {
+        Medico medico = medicoRepository.findByUsuarioIdUsuario(idUsuario);
+
+        if (medico == null) {
+            throw new RuntimeException("No existe un médico asociado al usuario con id: " + idUsuario);
+        }
+
+        return medicoMapper.toDTO(medico);
+    }
+
+
+
+
 
 }

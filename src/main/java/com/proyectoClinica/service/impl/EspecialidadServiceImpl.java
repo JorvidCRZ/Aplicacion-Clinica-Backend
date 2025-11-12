@@ -59,4 +59,6 @@ public class EspecialidadServiceImpl implements EspecialidadService {
         }
         especialidadRepository.deleteById(id);
     }
+
+
 }
