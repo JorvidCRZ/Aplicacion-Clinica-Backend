@@ -1,6 +1,7 @@
 package com.proyectoClinica.service.impl;
 
 import com.proyectoClinica.dto.request.PacienteRequestDTO;
+import com.proyectoClinica.dto.response.PacienteDashboardDTO;
 import com.proyectoClinica.dto.response.PacienteListadoResponseDTO;
 import com.proyectoClinica.dto.response.PacienteResponseDTO;
 import com.proyectoClinica.mapper.PacienteMapper;
@@ -121,5 +122,31 @@ public class PacienteServiceImpl implements PacienteService {
     public void eliminar(Integer id) {
         pacienteRepository.deleteById(id);
     }
+
+
+    /*mETODO DE PACIENTE TABLA DASHBOARD(MEDICO)*/
+
+    @Override
+    public List<PacienteDashboardDTO> listarDashboardPorMedico(Integer idMedico) {
+        return pacienteRepository.listarPacientesDashboardPorMedico(idMedico)
+                .stream()
+                .map(row -> PacienteDashboardDTO.builder()
+                        .idPaciente(((Number) row.get("idpaciente")).longValue())
+                        .nombreCompleto((String) row.get("nombrecompleto"))
+                        .edad(((Number) row.get("edad")).intValue())
+                        .genero((String) row.get("genero"))
+
+                        // 👇 Mapeo correcto según tu vista SQL
+                        .contactoEmail((String) row.get("contacto_email"))
+                        .contactoTelefonos((String) row.get("contacto_telefonos"))
+
+                        .ultimaCita(row.get("ultimacita") != null ? row.get("ultimacita").toString() : null)
+                        .diagnostico((String) row.get("diagnostico"))
+                        .build())
+                .toList();
+    }
+
+
+
 
 }

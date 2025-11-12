@@ -17,6 +17,7 @@ import com.proyectoClinica.service.CitaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -129,6 +130,13 @@ public class CitaServiceImpl implements CitaService {
         citaRepository.deleteById(id);
     }
 
+    @Override
+    public List<CitaResponseDTO> listarCitasDeHoy() {
+        LocalDate hoy=LocalDate.now();
+        List<Cita> citasDeHoy=citaRepository.findByFechaCita(hoy);
+        return citaMapper.toDTOList(citasDeHoy);
+    }
+
     // Euclid's algorithm: helper to compute allowed sub-intervals
     private int gcd(int a, int b) {
         a = Math.abs(a);
@@ -156,4 +164,19 @@ public class CitaServiceImpl implements CitaService {
             default: return dow.name();
         }
     }
+
+    /*numero de citas de medico , numero de citas del medico en este mes*/
+    @Override
+    public long contarCitasPorMedico(Integer idMedico) {
+        return citaRepository.contarCitasPorMedico(idMedico);
+    }
+
+    @Override
+    public long contarCitasDelMesActualPorMedico(Long idMedico) {
+        LocalDate inicioMes = LocalDate.now().withDayOfMonth(1);
+        LocalDate finMes = inicioMes.plusMonths(1).minusDays(1);
+        return citaRepository.countByMedicoIdAndFechaBetween(idMedico, inicioMes, finMes);
+    }
+
+
 }
