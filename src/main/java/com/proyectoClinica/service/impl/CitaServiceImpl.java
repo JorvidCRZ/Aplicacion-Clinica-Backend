@@ -1,6 +1,7 @@
 package com.proyectoClinica.service.impl;
 
 import com.proyectoClinica.dto.request.CitaRequestDTO;
+import com.proyectoClinica.dto.response.CitaMedicoViewDTO;
 import com.proyectoClinica.dto.response.CitaResponseDTO;
 import com.proyectoClinica.mapper.CitaMapper;
 import com.proyectoClinica.model.DetalleCita;
@@ -177,6 +178,27 @@ public class CitaServiceImpl implements CitaService {
         LocalDate finMes = inicioMes.plusMonths(1).minusDays(1);
         return citaRepository.countByMedicoIdAndFechaBetween(idMedico, inicioMes, finMes);
     }
+
+
+
+    /*Citas por dASHBOARD mEDICO*/
+
+    @Override
+    public List<CitaMedicoViewDTO> listarCitasDashboardPorMedico(Integer idMedico) {
+        return citaRepository.listarCitasDashboardPorMedico(idMedico)
+                .stream()
+                .map(row -> CitaMedicoViewDTO.builder()
+                        .fecha(row.get("fecha") != null ? row.get("fecha").toString() : null)
+                        .hora(row.get("hora") != null ? row.get("hora").toString() : null)
+                        .paciente((String) row.get("paciente"))
+                        .documento((String) row.get("documento"))
+                        .telefono((String) row.get("telefono"))
+                        .tipoConsulta((String) row.get("motivo_consulta"))
+                        .estado((String) row.get("estado"))
+                        .build())
+                .toList();
+    }
+
 
 
 }
