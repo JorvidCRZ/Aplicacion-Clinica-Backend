@@ -1,6 +1,7 @@
 package com.proyectoClinica.controller;
 
 import com.proyectoClinica.dto.request.CitaRequestDTO;
+import com.proyectoClinica.dto.response.CitaMedicoViewDTO;
 import com.proyectoClinica.dto.response.CitaResponseDTO;
 import com.proyectoClinica.service.CitaService;
 import jakarta.validation.Valid;
@@ -56,6 +57,14 @@ public class CitaController {
         long total = citaService.contarCitasDelMesActualPorMedico(idMedico);
         return ResponseEntity.ok(total);
     }
+
+    @GetMapping("/dashboard/medico/{idMedico}")
+    public ResponseEntity<List<CitaMedicoViewDTO>> listarCitasPorMedico(
+            @PathVariable Integer idMedico
+    ) {
+        return ResponseEntity.ok(citaService.listarCitasDashboardPorMedico(idMedico));
+    }
+
 
 
 }
