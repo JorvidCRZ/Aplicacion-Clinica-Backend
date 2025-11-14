@@ -1,6 +1,7 @@
 package com.proyectoClinica.service.impl;
 
 
+import com.proyectoClinica.dto.response.LlamarEspecialidadMedicoDTO;
 import com.proyectoClinica.dto.response.MedicoEspecialidadResponseDTO;
 import com.proyectoClinica.mapper.MedicoEspecialidadMapper;
 import com.proyectoClinica.model.MedicoEspecialidad;
@@ -41,4 +42,23 @@ public class MedicoEspecialidadServiceImpl implements MedicoEspecialidadService 
     public void eliminar(Integer id) {
         medicoEspecialidadRepository.deleteById(id);
     }
+
+
+    @Override
+    public LlamarEspecialidadMedicoDTO obtenerEspecialidadPorIdMedico(Integer idMedico) {
+
+        List<MedicoEspecialidad> lista = medicoEspecialidadRepository.findByMedico_IdMedico(idMedico);
+
+        if (lista.isEmpty()) {
+            throw new RuntimeException("El médico no tiene especialidad registrada.");
+        }
+
+        // Tomamos la primera especialidad (si tiene más, puedes elegir cuál)
+        String nombre = lista.get(0).getEspecialidad().getNombre();
+
+        return LlamarEspecialidadMedicoDTO.builder()
+                .nombreEspecialidad(nombre)
+                .build();
+    }
+
 }
