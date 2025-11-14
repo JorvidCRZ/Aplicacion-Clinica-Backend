@@ -1,5 +1,6 @@
 package com.proyectoClinica.controller;
 
+import com.proyectoClinica.dto.response.LlamarEspecialidadMedicoDTO;
 import com.proyectoClinica.dto.response.MedicoEspecialidadResponseDTO;
 import com.proyectoClinica.model.MedicoEspecialidad;
 import com.proyectoClinica.service.MedicoEspecialidadService;
@@ -38,5 +39,12 @@ public class MedicoEspecialidadController {
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         medicoEspecialidadService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/especialidad/{idMedico}")
+    public LlamarEspecialidadMedicoDTO obtenerEspecialidadPorMedico(
+            @PathVariable Integer idMedico
+    ) {
+        return medicoEspecialidadService.obtenerEspecialidadPorIdMedico(idMedico);
     }
 }
