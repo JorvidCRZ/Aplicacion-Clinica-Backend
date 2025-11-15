@@ -1,9 +1,8 @@
 package com.proyectoClinica.controller;
 
+import com.proyectoClinica.dto.request.ActualizarPerfilMedicoRequestDTO;
 import com.proyectoClinica.dto.request.MedicoRequestDTO;
-import com.proyectoClinica.dto.response.DisponibilidadMedicoResponseDTO;
-import com.proyectoClinica.dto.response.MedicoListadoResponseDTO;
-import com.proyectoClinica.dto.response.MedicoResponseDTO;
+import com.proyectoClinica.dto.response.*;
 import com.proyectoClinica.service.DisponibilidadMedicoService;
 import com.proyectoClinica.service.MedicoService;
 import jakarta.validation.Valid;
@@ -94,6 +93,23 @@ public class MedicoController {
         return ResponseEntity.noContent().build();
     }
 
+
+    //
+    @GetMapping("/perfil/{idMedico}")
+    public ResponseEntity<List<PerfilMedicoDTO>> listarperfilpormedico( @PathVariable Integer idMedico) {
+        return ResponseEntity.ok(medicoService.listarPerfilDashboardPorMedico(idMedico));
+    }
+
+    //
+    @PutMapping("/perfil/actualizar/{idMedico}")
+    public ResponseEntity<PerfilMedicoDTO> actualizarPerfil(
+            @PathVariable Integer idMedico,
+            @RequestBody ActualizarPerfilMedicoRequestDTO request
+    ){
+        return ResponseEntity.ok(
+                medicoService.actualizarPerfil(idMedico, request)
+        );
+    }
 
 
 }
