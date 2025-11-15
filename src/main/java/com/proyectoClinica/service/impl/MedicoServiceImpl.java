@@ -1,17 +1,26 @@
 package com.proyectoClinica.service.impl;
 
+import com.proyectoClinica.dto.request.ActualizarPerfilMedicoRequestDTO;
 import com.proyectoClinica.dto.request.MedicoRequestDTO;
 import com.proyectoClinica.dto.response.MedicoListadoResponseDTO;
 import com.proyectoClinica.dto.response.MedicoResponseDTO;
+import com.proyectoClinica.dto.response.PerfilMedicoDTO;
 import com.proyectoClinica.mapper.MedicoMapper;
 import com.proyectoClinica.model.Persona;
+import com.proyectoClinica.model.Usuario;
 import com.proyectoClinica.repository.PersonaRepository;
 import com.proyectoClinica.model.Medico;
 import com.proyectoClinica.repository.MedicoRepository;
+import com.proyectoClinica.repository.UsuarioRepository;
 import com.proyectoClinica.service.MedicoService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +31,7 @@ public class MedicoServiceImpl implements MedicoService {
     private final MedicoRepository medicoRepository;
     private final MedicoMapper medicoMapper;
     private final PersonaRepository personaRepository;
+    private final UsuarioRepository usuarioRepository;
 
     @Override
     public MedicoResponseDTO crear(MedicoRequestDTO requestDTO) {
@@ -83,7 +93,71 @@ public class MedicoServiceImpl implements MedicoService {
         return medicoMapper.toDTO(medico);
     }
 
+    @Override
+    public List<PerfilMedicoDTO> listarPerfilDashboardPorMedico(Integer idMedico) {
+        return medicoRepository.listarPerfilDashboardPorMedico(idMedico)
+                .stream()
+                .map(row->PerfilMedicoDTO.builder()
+                        .nombre1((String) row.get("nombre1"))
+                        .nombre2((String) row.get("nombre2"))
+                        .apellidoPaterno((String) row.get("apellidoPaterno"))
+                        .apellidoMaterno((String) row.get("apellidoMaterno"))
+                        .dni((String) row.get("dni"))
+                        .fechaNacimiento(
+                                row.get("fechaNacimiento") != null ?
+                                        row.get("fechaNacimiento").toString() : null
+                        )
+                        .genero((String) row.get("genero"))
+                        .telefono((String) row.get("telefono"))
+                        .direccion((String) row.get("direccion"))
+                        .correo((String) row.get("correo"))
+                        .especialidad((String) row.get("especialidad"))
+                        .colegiatura((String) row.get("colegiatura"))
+                        .build()
+                ).toList();
+    }
 
+    @Override
+    @Transactional
+    public PerfilMedicoDTO actualizarPerfil(Integer idMedico,
+                                            ActualizarPerfilMedicoRequestDTO req) {
+
+        Medico medico = medicoRepository.findById(idMedico)
+                .orElseThrow(() -> new RuntimeException("Médico no encontrado"));
+
+        Persona persona = medico.getPersona();
+        Usuario usuario = medico.getUsuario();
+
+        // Actualizar persona
+        persona.setNombre1(req.getNombre1());
+        persona.setNombre2(req.getNombre2());
+        persona.setApellidoPaterno(req.getApellidoPaterno());
+        persona.setApellidoMaterno(req.getApellidoMaterno());
+        persona.setDni(req.getDni());
+        persona.setFechaNacimiento(LocalDate.parse(req.getFechaNacimiento()));
+        persona.setGenero(req.getGenero());
+        persona.setTelefono(req.getTelefono());
+        persona.setDireccion(req.getDireccion());
+
+        // Actualizar usuario
+        usuario.setCorreo(req.getCorreo());
+
+        // Actualizar médico
+        medico.setColegiatura(req.getColegiatura());
+
+        // Especialidad (si tienes tabla intermedia medico_especialidad)
+        if(req.getEspecialidad() != null){
+            medicoRepository.actualizarEspecialidad(idMedico, req.getEspecialidad());
+        }
+
+        // Guardar
+        personaRepository.save(persona);
+        usuarioRepository.save(usuario);
+        medicoRepository.save(medico);
+
+        // Retornar perfil actualizado
+        return this.listarPerfilDashboardPorMedico(idMedico).get(0);
+    }
 
 
 
