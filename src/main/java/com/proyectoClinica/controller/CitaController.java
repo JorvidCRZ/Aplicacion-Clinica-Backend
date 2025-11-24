@@ -3,6 +3,7 @@ package com.proyectoClinica.controller;
 import com.proyectoClinica.dto.request.CitaRequestDTO;
 import com.proyectoClinica.dto.response.CitaMedicoViewDTO;
 import com.proyectoClinica.dto.response.CitaResponseDTO;
+import com.proyectoClinica.dto.response.HorasEstimadasCitasDTO;
 import com.proyectoClinica.service.CitaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -66,5 +67,11 @@ public class CitaController {
     }
 
 
+    @GetMapping("/dashboard/medico/{idMedico}/horas-promedio")
+    public ResponseEntity<HorasEstimadasCitasDTO> obtenerHorasPromedio(
+            @PathVariable Integer idMedico
+    ) {
+        return ResponseEntity.ok(citaService.obtenerHorasYPromedioPorMedico(idMedico));
+    }
 
 }

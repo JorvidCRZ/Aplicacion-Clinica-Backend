@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/medico-especialidades")
+@RequestMapping("/api/medico-especialidades")
 @RequiredArgsConstructor
 public class MedicoEspecialidadController {
 

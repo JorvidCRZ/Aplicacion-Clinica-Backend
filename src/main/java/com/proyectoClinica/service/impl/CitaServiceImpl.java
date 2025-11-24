@@ -3,6 +3,7 @@ package com.proyectoClinica.service.impl;
 import com.proyectoClinica.dto.request.CitaRequestDTO;
 import com.proyectoClinica.dto.response.CitaMedicoViewDTO;
 import com.proyectoClinica.dto.response.CitaResponseDTO;
+import com.proyectoClinica.dto.response.HorasEstimadasCitasDTO;
 import com.proyectoClinica.mapper.CitaMapper;
 import com.proyectoClinica.model.DetalleCita;
 import com.proyectoClinica.model.DisponibilidadMedico;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -195,9 +197,32 @@ public class CitaServiceImpl implements CitaService {
                         .telefono((String) row.get("telefono"))
                         .tipoConsulta((String) row.get("motivo_consulta"))
                         .estado((String) row.get("estado"))
+                        .subespecialidad((String) row.get("subespecialidad"))
+                        .especialidad((String) row.get("especialidad"))
                         .build())
                 .toList();
     }
+
+    @Override
+    public HorasEstimadasCitasDTO obtenerHorasYPromedioPorMedico(Integer idMedico) {
+
+        Map<String, Object> row = citaRepository.obtenerHorasPromedioPorMedico(idMedico);
+
+        if (row == null) {
+            return new HorasEstimadasCitasDTO(0.0, 0.0);
+        }
+
+        Double horas = row.get("horas_totales") != null
+                ? ((Number) row.get("horas_totales")).doubleValue()
+                : 0.0;
+
+        Double promedio = row.get("promedio_minutos") != null
+                ? ((Number) row.get("promedio_minutos")).doubleValue()
+                : 0.0;
+
+        return new HorasEstimadasCitasDTO(horas, promedio);
+    }
+
 
 
 

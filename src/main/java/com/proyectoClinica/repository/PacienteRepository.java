@@ -39,4 +39,34 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
     List<Map<String, Object>> listarPacientesDashboardPorMedico(@Param("idMedico") Integer idMedico);
 
 
+    /*Calcular puntualidad del paciente*/
+    @Query(value = """
+    SELECT 
+        ROUND(
+            (COUNT(*) FILTER (WHERE c.estado = 'completada')::numeric /
+             NULLIF(COUNT(*) FILTER (WHERE c.estado IN ('completada','atendida')),0)
+            ) * 100, 2
+        ) AS puntualidad
+    FROM cita c
+    JOIN detalle_cita dc ON c.id_detalle_cita = dc.id_detalle_cita
+    JOIN medico_especialidad me ON dc.id_medico_especialidad = me.id_medico_especialidad
+    WHERE me.id_medico = :idMedico
+    """, nativeQuery = true)
+    Double obtenerPuntualidadPorMedico(@Param("idMedico") Integer idMedico);
+
+    /*Caluclar satisfaccion segun citas completadas*/
+    @Query(value = """
+    SELECT 
+        ROUND(
+            (COUNT(*) FILTER (WHERE c.estado = 'completada')::numeric /
+             NULLIF(COUNT(*), 0)
+            ) * 100, 2
+        ) AS satisfaccion
+    FROM cita c
+    JOIN detalle_cita dc ON c.id_detalle_cita = dc.id_detalle_cita
+    JOIN medico_especialidad me ON dc.id_medico_especialidad = me.id_medico_especialidad
+    WHERE me.id_medico = :idMedico
+    """, nativeQuery = true)
+    Double obtenerSatisfaccionPorMedico(@Param("idMedico") Integer idMedico);
+
 }

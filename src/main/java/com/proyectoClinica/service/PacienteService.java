@@ -1,9 +1,7 @@
 package com.proyectoClinica.service;
 
 import com.proyectoClinica.dto.request.PacienteRequestDTO;
-import com.proyectoClinica.dto.response.PacienteDashboardDTO;
-import com.proyectoClinica.dto.response.PacienteResponseDTO;
-import com.proyectoClinica.dto.response.PacienteListadoResponseDTO;
+import com.proyectoClinica.dto.response.*;
 
 
 import java.util.List;
@@ -21,5 +19,10 @@ public interface PacienteService {
     /*Tabla Paciente en dashboard Medico*/
     List<PacienteDashboardDTO> listarDashboardPorMedico(Integer idMedico);
 
+    /*Para calcular la puntualidad*/
+    /* Calcular puntualidad */
+    PuntualidadDTO obtenerPuntualidadMedico(Integer idMedico);
+    /* Calcular satisfacción */
+    SatisfaccionDTO obtenerSatisfaccionMedico(Integer idMedico);
 
 }

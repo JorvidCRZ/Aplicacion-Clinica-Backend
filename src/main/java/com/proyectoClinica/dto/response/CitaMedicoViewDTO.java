@@ -14,4 +14,7 @@ public class CitaMedicoViewDTO {
     private String telefono;
     private String tipoConsulta;
     private String estado;
+    //nuevos
+    private String subespecialidad;
+    private String especialidad;
 }

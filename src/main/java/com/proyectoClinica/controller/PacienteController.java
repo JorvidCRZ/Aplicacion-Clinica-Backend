@@ -1,9 +1,7 @@
 package com.proyectoClinica.controller;
 
 import com.proyectoClinica.dto.request.PacienteRequestDTO;
-import com.proyectoClinica.dto.response.PacienteDashboardDTO;
-import com.proyectoClinica.dto.response.PacienteListadoResponseDTO;
-import com.proyectoClinica.dto.response.PacienteResponseDTO;
+import com.proyectoClinica.dto.response.*;
 import com.proyectoClinica.mapper.PacienteMapper;
 import com.proyectoClinica.model.Paciente;
 import com.proyectoClinica.service.PacienteService;
@@ -69,7 +67,16 @@ public class PacienteController {
     ) {
         return ResponseEntity.ok(pacienteService.listarDashboardPorMedico(idMedico));
     }
+    /*Obtener Puntualidad*/
+    @GetMapping("/puntualidad/medico/{idMedico}")
+    public ResponseEntity<PuntualidadDTO> obtenerPuntualidad(@PathVariable Integer idMedico) {
+        return ResponseEntity.ok(pacienteService.obtenerPuntualidadMedico(idMedico));
+    }
 
+    @GetMapping("/satisfaccion/medico/{idMedico}")
+    public ResponseEntity<SatisfaccionDTO> obtenerSatisfaccion(@PathVariable Integer idMedico) {
+        return ResponseEntity.ok(pacienteService.obtenerSatisfaccionMedico(idMedico));
+    }
 
 
 }

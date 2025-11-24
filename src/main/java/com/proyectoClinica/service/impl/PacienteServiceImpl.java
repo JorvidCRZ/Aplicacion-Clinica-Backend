@@ -1,9 +1,7 @@
 package com.proyectoClinica.service.impl;
 
 import com.proyectoClinica.dto.request.PacienteRequestDTO;
-import com.proyectoClinica.dto.response.PacienteDashboardDTO;
-import com.proyectoClinica.dto.response.PacienteListadoResponseDTO;
-import com.proyectoClinica.dto.response.PacienteResponseDTO;
+import com.proyectoClinica.dto.response.*;
 import com.proyectoClinica.mapper.PacienteMapper;
 import com.proyectoClinica.model.Paciente;
 import com.proyectoClinica.model.Persona;
@@ -118,6 +116,7 @@ public class PacienteServiceImpl implements PacienteService {
                         .build())
                 .toList();
     }
+
     @Override
     public void eliminar(Integer id) {
         pacienteRepository.deleteById(id);
@@ -144,9 +143,31 @@ public class PacienteServiceImpl implements PacienteService {
                         .diagnostico((String) row.get("diagnostico"))
                         .build())
                 .toList();
+
+
+        /*Metodo para calcular la puntualidad*/
+
     }
+    @Override
+    public PuntualidadDTO obtenerPuntualidadMedico(Integer idMedico) {
+        Double valor = pacienteRepository.obtenerPuntualidadPorMedico(idMedico);
 
+        if (valor == null) {
+            valor = 0.0;
+        }
 
+        return new PuntualidadDTO(valor);
+    }
+    @Override
+    public SatisfaccionDTO obtenerSatisfaccionMedico(Integer idMedico) {
+        Double valor = pacienteRepository.obtenerSatisfaccionPorMedico(idMedico);
+
+        if (valor == null) {
+            valor = 0.0;
+        }
+
+        return new SatisfaccionDTO(valor);
+    }
 
 
 }
