@@ -8,15 +8,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Entity
-@Table(name = "medico")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-
+@Entity
+@Table(name = "medico")
 public class Medico {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

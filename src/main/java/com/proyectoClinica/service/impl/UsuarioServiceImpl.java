@@ -11,10 +11,9 @@ import com.proyectoClinica.model.Usuario;
 import com.proyectoClinica.repository.PacienteRepository;
 import com.proyectoClinica.repository.PersonaRepository;
 import com.proyectoClinica.repository.UsuarioRepository;
-import com.proyectoClinica.service.UsuarioService;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import com.proyectoClinica.repository.RecordatorioRepository;
+import com.proyectoClinica.service.UsuarioService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,17 +44,17 @@ public class UsuarioServiceImpl implements UsuarioService {
             if (!existePaciente) {
                 Paciente paciente = new Paciente();
                 paciente.setPersona(personaGuardada);
-                // Puedes usar el mismo usuario como quien lo agregó
                 paciente.setUsuarioAgrego(guardado);
                 pacienteRepository.save(paciente);
             }
         }
 
-        // Tras crear el usuario, backfill recordatorios pendientes que no tienen destinatario
+        // Backfill recordatorios pendientes
         try {
             if (personaGuardada.getIdPersona() != null) {
                 Integer idPersona = personaGuardada.getIdPersona();
-                var pendientes = recordatorioRepository.findByCita_Paciente_Persona_IdPersonaAndDestinatarioCorreoIsNull(idPersona);
+                var pendientes = recordatorioRepository
+                        .findByCita_Paciente_Persona_IdPersonaAndDestinatarioCorreoIsNull(idPersona);
                 for (var r : pendientes) {
                     r.setDestinatarioCorreo(guardado.getCorreo());
                     recordatorioRepository.save(r);
@@ -86,7 +85,6 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioMapper.toDTOList(usuarioRepository.findAll());
     }
 
-
     @Override
     public void eliminar(Integer id) {
         usuarioRepository.deleteById(id);
@@ -103,6 +101,22 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioMapper.toDTO(guardado);
     }
 
+    @Override
+    public UsuarioResponseDTO actualizar(Integer idUsuario, UsuarioRequestDTO requestDTO) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + idUsuario));
 
+        // Actualizar correo y demás campos si aplica
+        usuario.setCorreo(requestDTO.getCorreo());
+
+        if (requestDTO.getPersona() != null) {
+            Persona persona = usuario.getPersona();
+            personaMapper.updateFromDTO(requestDTO.getPersona(), persona); // Implementar método en mapper
+            personaRepository.save(persona);
+        }
+
+        Usuario guardado = usuarioRepository.save(usuario);
+        return usuarioMapper.toDTO(guardado);
+    }
 
 }

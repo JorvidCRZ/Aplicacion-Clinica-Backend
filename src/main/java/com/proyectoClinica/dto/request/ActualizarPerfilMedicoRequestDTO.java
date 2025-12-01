@@ -2,8 +2,12 @@ package com.proyectoClinica.dto.request;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ActualizarPerfilMedicoRequestDTO {
+
+    // Persona
 
     // Persona
     private String nombre1;
@@ -20,6 +24,8 @@ public class ActualizarPerfilMedicoRequestDTO {
     private String correo;
 
     // Médico
-    private String especialidad;
     private String colegiatura;
+
+    private String especialidad;
+    private String horario;
 }

@@ -12,6 +12,7 @@ public interface UsuarioService {
     UsuarioResponseDTO obtenerPorId(Integer id);
     List<UsuarioResponseDTO> listar();
     void eliminar(Integer id);
+    UsuarioResponseDTO actualizar(Integer id, UsuarioRequestDTO dto);
 
     UsuarioResponseDTO actualizarCorreo(UsuarioEditRequestDTO requestDTO);
 }
