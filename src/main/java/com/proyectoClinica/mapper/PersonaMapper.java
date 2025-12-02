@@ -4,6 +4,7 @@ import com.proyectoClinica.dto.request.PersonaRequestDTO;
 import com.proyectoClinica.dto.response.PersonaResponseDTO;
 import com.proyectoClinica.model.Persona;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
@@ -15,5 +16,8 @@ public interface PersonaMapper {
     List<PersonaResponseDTO> toDTOList(List<Persona> personas);
 
     Persona toEntity(PersonaRequestDTO dto);
+
+    void updateFromDTO(PersonaRequestDTO dto, @MappingTarget Persona entity);
+
 
 }

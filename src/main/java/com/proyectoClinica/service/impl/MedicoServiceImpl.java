@@ -33,7 +33,7 @@ public class MedicoServiceImpl implements MedicoService {
 
     @Override
     public MedicoResponseDTO crear(MedicoRequestDTO requestDTO) {
-
+        // Verificar que la persona indicada exista y asignarla al médico
         Integer idPersona = requestDTO.getIdPersona();
         Persona persona = personaRepository.findById(idPersona)
                 .orElseThrow(() -> new RuntimeException("Persona no encontrada con id: " + idPersona));
@@ -126,7 +126,7 @@ public class MedicoServiceImpl implements MedicoService {
         Persona persona = medico.getPersona();
         Usuario usuario = medico.getUsuario();
 
-
+        // Actualizar persona
         persona.setNombre1(req.getNombre1());
         persona.setNombre2(req.getNombre2());
         persona.setApellidoPaterno(req.getApellidoPaterno());
@@ -137,18 +137,23 @@ public class MedicoServiceImpl implements MedicoService {
         persona.setTelefono(req.getTelefono());
         persona.setDireccion(req.getDireccion());
 
+        // Actualizar usuario
         usuario.setCorreo(req.getCorreo());
 
+        // Actualizar médico
         medico.setColegiatura(req.getColegiatura());
 
+        // Especialidad (si tienes tabla intermedia medico_especialidad)
         if(req.getEspecialidad() != null){
             medicoRepository.actualizarEspecialidad(idMedico, req.getEspecialidad());
         }
 
+        // Guardar
         personaRepository.save(persona);
         usuarioRepository.save(usuario);
         medicoRepository.save(medico);
 
+        // Retornar perfil actualizado
         return this.listarPerfilDashboardPorMedico(idMedico).get(0);
     }
 
