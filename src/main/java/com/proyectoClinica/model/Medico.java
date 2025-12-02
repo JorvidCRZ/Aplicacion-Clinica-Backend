@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -42,6 +43,10 @@ public class Medico {
 
     @OneToMany(mappedBy = "medico", fetch = FetchType.LAZY)
     private List<DisponibilidadMedico> disponibilidades;
+
+    @OneToMany(mappedBy = "medico", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<HorarioDisponible> horariosDisponibles = new ArrayList<>();
 
 
 }

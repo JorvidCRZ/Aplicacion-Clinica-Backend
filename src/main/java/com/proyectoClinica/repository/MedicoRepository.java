@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public interface MedicoRepository extends JpaRepository<Medico, Integer> {
@@ -36,10 +37,7 @@ public interface MedicoRepository extends JpaRepository<Medico, Integer> {
         ORDER BY p.apellido_paterno
         """, nativeQuery = true)
     List<Map<String, Object>> listarMedicosDetalle();
-
-
-    Medico findByUsuarioIdUsuario(Integer idUsuario);
-
+    Optional<Medico> findByUsuarioIdUsuario(Integer idUsuario);
 
     /*-------------------------------*/
     @Query(value = """
@@ -80,5 +78,6 @@ public interface MedicoRepository extends JpaRepository<Medico, Integer> {
     void actualizarEspecialidad(
             @Param("idMedico") Integer idMedico,
             @Param("nombreEspecialidad") String nombreEspecialidad);
+
 
 }
