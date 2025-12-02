@@ -46,7 +46,22 @@ public class DisponibilidadMedico {
     @Column(name = "dia_activo")
     private Boolean diaActivo;
 
+    @Column(name = "estado_aprobacion", length = 20)
+    private String estadoAprobacion;
+
+    @Column(name = "pacientes_max")
+    private Integer pacientesMax;
+
     @Column(name = "duracion_minutos")
     private Integer duracionMinutos;
 
+    @PrePersist
+    public void prePersist() {
+        if (estado == null) estado = "activo";
+        if (vigencia == null) vigencia = true;
+        if (diaActivo == null) diaActivo = true;
+        if (duracionMinutos == null) duracionMinutos = 30;
+        if (pacientesMax == null) pacientesMax = 10;
+        if (estadoAprobacion == null) estadoAprobacion = "pendiente";
+    }
 }

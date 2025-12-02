@@ -1,6 +1,7 @@
 package com.proyectoClinica.service.impl;
 
 
+import com.proyectoClinica.dto.request.CambiarPasswordRequestDTO;
 import com.proyectoClinica.dto.request.LoginRequestDTO;
 import com.proyectoClinica.dto.response.LoginResponseDTO;
 import com.proyectoClinica.model.Usuario;
@@ -14,6 +15,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
 
     @Override
     public LoginResponseDTO login(LoginRequestDTO request) {
@@ -34,5 +36,18 @@ public class AuthServiceImpl implements AuthService {
                 .apellidoPaterno(usuario.getPersona().getApellidoPaterno())
                 .apellidoMaterno(usuario.getPersona().getApellidoMaterno())
                 .build();
+    }
+
+    @Override
+    public void cambiarPassword(Integer idUsuario, CambiarPasswordRequestDTO request) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        if (!request.getActual().equals(usuario.getContrasena())) {
+            throw new RuntimeException("La contraseña actual es incorrecta");
+        }
+
+        usuario.setContrasena(request.getNueva());
+        usuarioRepository.save(usuario);
     }
 }

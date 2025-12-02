@@ -23,7 +23,6 @@ public class CitaResumen {
     @Column(name = "id_cita_resumen")
     private Integer idCitaResumen;
 
-    // 🔗 Relación con Cita (FK id_cita)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cita", nullable = false)
     private Cita cita;
@@ -37,9 +36,8 @@ public class CitaResumen {
     @Column(nullable = false, length = 50)
     private String estado;
 
-    // 🔗 Relación con Medico (FK id_medico)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_medico")
+    @JoinColumn(name = "id_medico", nullable = true)
     private Medico medico;
 
     @Column(length = 100)
@@ -60,7 +58,6 @@ public class CitaResumen {
     @Column(columnDefinition = "TEXT")
     private String motivo;
 
-    // ✅ Valor por defecto antes de insertar
     @PrePersist
     public void prePersist() {
         if (consultorio == null || consultorio.trim().isEmpty()) {

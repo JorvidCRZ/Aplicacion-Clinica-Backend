@@ -1,7 +1,9 @@
 package com.proyectoClinica.service.impl;
 import com.proyectoClinica.dto.request.HorarioBloqueRequestDTO;
 import com.proyectoClinica.dto.response.HorarioBloqueResponseDTO;
+import com.proyectoClinica.dto.response.HorariosMedicoResponseDTO;
 import com.proyectoClinica.mapper.HorarioBloqueMapper;
+import com.proyectoClinica.mapper.HorarioDisponibleMapper;
 import com.proyectoClinica.model.HorarioBloque;
 import com.proyectoClinica.repository.HorarioBloqueRepository;
 import com.proyectoClinica.service.HorarioBloqueService;
@@ -17,6 +19,7 @@ public class HorarioBloqueServiceImpl implements HorarioBloqueService{
 
     private final HorarioBloqueRepository repository;
     private final HorarioBloqueMapper mapper;
+    private final HorarioDisponibleMapper horarioDisponibleMapper;
 
     @Override
     public HorarioBloqueResponseDTO crear(HorarioBloqueRequestDTO request) {
@@ -52,4 +55,11 @@ public class HorarioBloqueServiceImpl implements HorarioBloqueService{
     public void eliminar(Integer id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public HorariosMedicoResponseDTO obtenerHorariosPorMedico(Integer idMedico) {
+        List<HorarioBloque> bloques = repository.findHorariosDisponiblesPorMedico(idMedico);
+        return horarioDisponibleMapper.toHorariosMedicoResponse(idMedico, bloques);
+    }
+
 }

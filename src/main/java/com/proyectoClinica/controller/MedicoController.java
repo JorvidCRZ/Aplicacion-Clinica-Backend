@@ -7,8 +7,10 @@ import com.proyectoClinica.service.DisponibilidadMedicoService;
 import com.proyectoClinica.service.MedicoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -86,6 +88,20 @@ public class MedicoController {
         return ResponseEntity.ok(dto);
     }
 
+    @PostMapping("/guardar") // 👈 Cambiado para no chocar con otros GET /perfil
+    public ResponseEntity<?> crearMedico(@Valid @RequestBody MedicoRequestDTO requestDTO){
+        try {
+            MedicoResponseDTO creado = medicoService.crear(requestDTO);
+            return ResponseEntity.ok(Map.of(
+                    "mensaje", "✅ Médico creado exitosamente",
+                    "data", creado
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("mensaje", "❌ Error creando médico", "error", e.getMessage()));
+        }
+    }
+
     // DELETE para eliminar un horario de disponibilidad por su ID
     @DeleteMapping("/disponibilidad/{idDisponibilidad}")
     public ResponseEntity<Void> eliminarDisponibilidad(@PathVariable Integer idDisponibilidad) {
@@ -102,14 +118,17 @@ public class MedicoController {
 
     //
     @PutMapping("/perfil/actualizar/{idMedico}")
-    public ResponseEntity<PerfilMedicoDTO> actualizarPerfil(
-            @PathVariable Integer idMedico,
-            @RequestBody ActualizarPerfilMedicoRequestDTO request
+    public ResponseEntity<?> actualizarPerfil(
+            @PathVariable("idMedico") Integer idMedico,
+            @Valid @RequestBody ActualizarPerfilMedicoRequestDTO requestDTO
     ){
-        return ResponseEntity.ok(
-                medicoService.actualizarPerfil(idMedico, request)
-        );
+        try {
+            PerfilMedicoDTO actualizado = medicoService.actualizarPerfil(idMedico, requestDTO);
+            return ResponseEntity.ok(actualizado);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error actualizando perfil: " + e.getMessage());
+        }
     }
-
-
 }

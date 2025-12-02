@@ -1,6 +1,7 @@
 package com.proyectoClinica.service;
 import com.proyectoClinica.dto.request.HorarioBloqueRequestDTO;
 import com.proyectoClinica.dto.response.HorarioBloqueResponseDTO;
+import com.proyectoClinica.dto.response.HorariosMedicoResponseDTO;
 
 import java.util.List;
 import java.util.List;
@@ -11,4 +12,5 @@ public interface HorarioBloqueService {
     HorarioBloqueResponseDTO obtenerPorId(Integer id);
     HorarioBloqueResponseDTO actualizar(Integer id, HorarioBloqueRequestDTO request);
     void eliminar(Integer id);
+    HorariosMedicoResponseDTO obtenerHorariosPorMedico(Integer idMedico);
 }

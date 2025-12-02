@@ -1,6 +1,7 @@
 package com.proyectoClinica.controller;
 import com.proyectoClinica.dto.request.HorarioBloqueRequestDTO;
 import com.proyectoClinica.dto.response.HorarioBloqueResponseDTO;
+import com.proyectoClinica.dto.response.HorariosMedicoResponseDTO;
 import com.proyectoClinica.service.HorarioBloqueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -39,4 +40,13 @@ public class HorarioBloqueController {
         service.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/medico/{idMedico}")
+    public ResponseEntity<HorariosMedicoResponseDTO> obtenerHorariosPorMedico(
+            @PathVariable Integer idMedico) {
+
+        return ResponseEntity.ok(service.obtenerHorariosPorMedico(idMedico));
+    }
+
+
 }

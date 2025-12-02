@@ -26,4 +26,11 @@ public class MedicoEspecialidad {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_especialidad", nullable = false)
     private Especialidad especialidad;
+
+    @PrePersist
+    public void prePersist() {
+        if (medico == null || especialidad == null) {
+            throw new IllegalStateException("Medico y Especialidad no pueden ser nulos");
+        }
+    }
 }

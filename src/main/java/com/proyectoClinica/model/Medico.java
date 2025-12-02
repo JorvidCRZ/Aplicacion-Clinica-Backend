@@ -8,15 +8,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Entity
-@Table(name = "medico")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-
-public class Medico {
-
+@Entity
+@Table(name = "medico")
+public class Medico extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,5 +41,6 @@ public class Medico {
     @OneToMany(mappedBy = "medico", fetch = FetchType.LAZY)
     private List<DisponibilidadMedico> disponibilidades;
 
-
+    @OneToMany(mappedBy = "medico", fetch = FetchType.LAZY)
+    private List<CitaResumen> citasResumen;
 }

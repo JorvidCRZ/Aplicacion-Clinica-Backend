@@ -25,10 +25,10 @@ public class SubEspecialidad {
     @JoinColumn(name = "id_especialidad", nullable = false)
     private Especialidad especialidad;
 
-    @Column(nullable = false, length = 100)
+    @Column(name="nombre", nullable = false, length = 100)
     private String nombre;
 
-    @Column
+    @Column(name = "descripcion")
     private String descripcion;
 
     @Column(name = "url_img")

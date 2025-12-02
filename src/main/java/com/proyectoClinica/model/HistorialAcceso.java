@@ -31,6 +31,15 @@ public class HistorialAcceso {
     @Column(name = "ip_origen", length = 50)
     private String ipOrigen;
 
-    @Column
+    @Column(name = "accion")
     private String accion;
+
+    @PrePersist
+    public void prePersist() {
+        if (fechaHora == null) {
+            fechaHora = LocalDateTime.now();
+        }
+        if (ipOrigen == null) ipOrigen = "";
+        if (accion == null) accion = "";
+    }
 }

@@ -23,4 +23,5 @@ public interface MedicoService {
 
     PerfilMedicoDTO actualizarPerfil(Integer idMedico, ActualizarPerfilMedicoRequestDTO request);
 
+
 }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Table(name = "cita")
@@ -31,7 +32,7 @@ public class Cita {
     private DetalleCita detalleCita;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_disponibilidad", nullable = false)
+    @JoinColumn(name = "id_disponibilidad", nullable = true)
     private DisponibilidadMedico disponibilidad;
 
     @Column(name = "fecha_cita", nullable = false)
@@ -43,7 +44,15 @@ public class Cita {
     @Column(nullable = false, length = 50)
     private String estado;
 
-    @Column(name = "motivo_consulta")
+    @Column(name = "motivo_consulta", length = 255)
     private String motivoConsulta;
 
+    @OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Recordatorio> recordatorios = new java.util.ArrayList<>();
+
+    @PrePersist
+    public void prePersistDefaults() {
+        if (estado == null || estado.trim().isEmpty()) estado = "pendiente";
+    }
 }

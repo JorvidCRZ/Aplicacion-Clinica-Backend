@@ -33,15 +33,25 @@ public class HistorialMedico {
     @JoinColumn(name = "id_medico")
     private Medico medico;
 
-    @Column
+    @Column(name = "diagnostico")
     private String diagnostico;
 
-    @Column
+    @Column(name = "observaciones")
     private String observaciones;
 
-    @Column
+    @Column(name = "receta")
     private String receta;
 
-    @Column
+    @Column(name = "fecha")
     private LocalDateTime fecha;
+
+    @PrePersist
+    public void prePersist() {
+        if (fecha == null) {
+            fecha = LocalDateTime.now();
+        }
+        if (diagnostico == null) diagnostico = "";
+        if (observaciones == null) observaciones = "";
+        if (receta == null) receta = "";
+    }
 }

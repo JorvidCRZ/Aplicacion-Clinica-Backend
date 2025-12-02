@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Paciente {
+public class Paciente extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +36,9 @@ public class Paciente {
     @Column(name = "altura")
     private Double altura;
 
+    @Column(length = 20)
+    private String estado = "activo";
+
     @Column(name = "contacto_emergencia_nombre", length = 100)
     private String contactoEmergenciaNombre;
 
@@ -45,4 +48,11 @@ public class Paciente {
     @Column(name = "contacto_emergencia_telefono", length = 20)
     private String contactoEmergenciaTelefono;
 
+    @Column(name = "contacto_emergencia_email", length = 250)
+    private String contactoEmergenciaEmail;
+
+    @PrePersist
+    public void prePersistDefaults() {
+        if (estado == null || estado.trim().isEmpty()) estado = "activo";
+    }
 }

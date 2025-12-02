@@ -23,9 +23,9 @@ public class RolPermiso {
     @JoinColumn(name = "id_rol", nullable = false)
     private Rol rol;
 
-    @Column(nullable = false, length = 50)
+    @Column(name="tabla", nullable = false, length = 50)
     private String tabla;
 
-    @Column(nullable = false, length = 50)
+    @Column(name="accion", nullable = false, length = 50)
     private String accion;
 }

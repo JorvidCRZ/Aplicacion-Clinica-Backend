@@ -25,12 +25,21 @@ public class HistorialCita {
     @JoinColumn(name = "id_cita")
     private Cita cita;
 
-    @Column(length = 50)
+    @Column(name = "accion", length = 50)
     private String accion;
 
-    @Column(nullable = false)
+    @Column(name="fecha", nullable = false)
     private LocalDateTime fecha;
 
-    @Column
+    @Column(name = "detalle", columnDefinition = "TEXT")
     private String detalle;
+
+    @PrePersist
+    public void prePersist() {
+        if (fecha == null) {
+            fecha = LocalDateTime.now();
+        }
+        if (accion == null) accion = "";
+        if (detalle == null) detalle = "";
+    }
 }
