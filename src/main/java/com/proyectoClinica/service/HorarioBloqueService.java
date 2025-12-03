@@ -1,5 +1,7 @@
 package com.proyectoClinica.service;
 import com.proyectoClinica.dto.request.HorarioBloqueRequestDTO;
+import com.proyectoClinica.dto.response.BloquesPorDiaResponseDTO;
+import com.proyectoClinica.dto.response.DisponibilidadDashboardResponse;
 import com.proyectoClinica.dto.response.HorarioBloqueResponseDTO;
 import com.proyectoClinica.dto.response.HorariosMedicoResponseDTO;
 import com.proyectoClinica.model.HorarioBloque;
@@ -18,4 +20,10 @@ public interface HorarioBloqueService {
 
 //
 //    List<HorarioBloque> obtenerBloquesDisponibles(Integer idMedicoEspecialidad, LocalDate fecha);
+
+    public List<DisponibilidadDashboardResponse> listarDisponibilidades();
+    List<BloquesPorDiaResponseDTO> obtenerBloquesPorMedico(Integer idMedico);
+
+    int actualizarDisponibilidadPorMedico(Integer idMedico, boolean disponible);
+
 }

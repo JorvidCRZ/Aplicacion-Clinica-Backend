@@ -1,5 +1,6 @@
 package com.proyectoClinica.service.impl;
 
+import com.proyectoClinica.dto.request.ActualizarEstadoCitaRequest;
 import com.proyectoClinica.dto.request.CitaRequestDTO;
 import com.proyectoClinica.dto.response.CitaMedicoViewDTO;
 import com.proyectoClinica.dto.response.CitaResponseDTO;
