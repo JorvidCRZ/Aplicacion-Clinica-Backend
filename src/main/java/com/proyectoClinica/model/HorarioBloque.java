@@ -32,9 +32,9 @@ public class HorarioBloque {
 
     @Column(name = "disponible", nullable = false)
     @Builder.Default
-    private Boolean disponible = true;
+    private Boolean disponible = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cita")
     private Cita cita;
 

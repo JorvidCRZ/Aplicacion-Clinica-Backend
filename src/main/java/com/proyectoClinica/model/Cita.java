@@ -35,6 +35,15 @@ public class Cita {
     @JoinColumn(name = "id_disponibilidad", nullable = true)
     private DisponibilidadMedico disponibilidad;
 
+    @OneToOne(mappedBy = "cita", fetch = FetchType.LAZY)
+    private HorarioBloque horarioBloque;
+
+    @OneToOne(mappedBy = "cita", fetch = FetchType.LAZY)
+    private PagoDetalle pagoDetalle;
+
+    @OneToOne(mappedBy = "cita", fetch = FetchType.LAZY)
+    private CitaResumen citaResumen;
+
     @Column(name = "fecha_cita", nullable = false)
     private LocalDate fechaCita;
 

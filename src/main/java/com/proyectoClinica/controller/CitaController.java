@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/citas")
 @RequiredArgsConstructor
@@ -83,6 +82,4 @@ public class CitaController {
     ) {
         return ResponseEntity.ok(citaService.actualizarEstado(id, request));
     }
-
-
 }

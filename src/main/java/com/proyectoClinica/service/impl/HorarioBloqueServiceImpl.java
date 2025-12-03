@@ -10,6 +10,7 @@ import com.proyectoClinica.service.HorarioBloqueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,5 +62,12 @@ public class HorarioBloqueServiceImpl implements HorarioBloqueService{
         List<HorarioBloque> bloques = repository.findHorariosDisponiblesPorMedico(idMedico);
         return horarioDisponibleMapper.toHorariosMedicoResponse(idMedico, bloques);
     }
+
+
+//
+//    @Override
+//    public List<HorarioBloque> obtenerBloquesDisponibles(Integer idMedicoEspecialidad, LocalDate fecha) {
+//        return List.of();
+//    }
 
 }

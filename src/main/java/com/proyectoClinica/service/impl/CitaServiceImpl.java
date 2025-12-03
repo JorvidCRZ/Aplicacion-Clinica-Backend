@@ -1,21 +1,14 @@
 package com.proyectoClinica.service.impl;
 
-import com.proyectoClinica.dto.request.ActualizarEstadoCitaRequest;
 import com.proyectoClinica.dto.request.CitaRequestDTO;
 import com.proyectoClinica.dto.response.CitaMedicoViewDTO;
 import com.proyectoClinica.dto.response.CitaResponseDTO;
 import com.proyectoClinica.dto.response.HorasEstimadasCitasDTO;
 import com.proyectoClinica.mapper.CitaMapper;
-import com.proyectoClinica.model.DetalleCita;
-import com.proyectoClinica.model.DisponibilidadMedico;
-import com.proyectoClinica.model.Paciente;
-import com.proyectoClinica.repository.DetalleCitaRepository;
-import com.proyectoClinica.repository.DisponibilidadMedicoRepository;
-import com.proyectoClinica.repository.PacienteRepository;
+import com.proyectoClinica.model.*;
+import com.proyectoClinica.repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import com.proyectoClinica.model.Cita;
-import com.proyectoClinica.repository.CitaRepository;
 import com.proyectoClinica.service.CitaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,6 +25,7 @@ public class CitaServiceImpl implements CitaService {
     private final CitaMapper citaMapper;
     private final PacienteRepository pacienteRepository;
     private final DetalleCitaRepository detalleCitaRepository;
+    private final HorarioBloqueRepository horarioBloqueRepository;
     private final DisponibilidadMedicoRepository disponibilidadMedicoRepository;
 
     @Override

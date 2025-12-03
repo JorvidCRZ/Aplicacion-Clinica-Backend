@@ -2,8 +2,9 @@ package com.proyectoClinica.service;
 import com.proyectoClinica.dto.request.HorarioBloqueRequestDTO;
 import com.proyectoClinica.dto.response.HorarioBloqueResponseDTO;
 import com.proyectoClinica.dto.response.HorariosMedicoResponseDTO;
+import com.proyectoClinica.model.HorarioBloque;
 
-import java.util.List;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface HorarioBloqueService {
@@ -13,4 +14,8 @@ public interface HorarioBloqueService {
     HorarioBloqueResponseDTO actualizar(Integer id, HorarioBloqueRequestDTO request);
     void eliminar(Integer id);
     HorariosMedicoResponseDTO obtenerHorariosPorMedico(Integer idMedico);
+
+
+//
+//    List<HorarioBloque> obtenerBloquesDisponibles(Integer idMedicoEspecialidad, LocalDate fecha);
 }
