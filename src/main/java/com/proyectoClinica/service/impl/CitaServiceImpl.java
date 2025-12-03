@@ -14,6 +14,7 @@ import com.proyectoClinica.service.CitaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +29,24 @@ public class CitaServiceImpl implements CitaService {
     private final DetalleCitaRepository detalleCitaRepository;
     private final HorarioBloqueRepository horarioBloqueRepository;
     private final DisponibilidadMedicoRepository disponibilidadMedicoRepository;
+    private final CitaResumenRepository citaResumenRepository;
 
     @Override
     public CitaResponseDTO crear(CitaRequestDTO requestDTO) {
+
+        // Validación: evitar que el paciente tenga otra cita muy cercana
+        boolean conflictoHora = citaRepository.existeCitaCercana(
+                requestDTO.getIdPaciente(),
+                requestDTO.getFechaCita(),
+                requestDTO.getHoraCita().minusMinutes(30), // intervalo previo permitido
+                requestDTO.getHoraCita().plusMinutes(30)   // intervalo posterior permitido
+        );
+
+        if (conflictoHora) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "El paciente ya tiene otra cita en un horario cercano");
+        }
+
         // Validaciones y carga de entidades relacionadas
         Paciente paciente = pacienteRepository.findById(requestDTO.getIdPaciente())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
@@ -109,8 +125,49 @@ public class CitaServiceImpl implements CitaService {
                 .build();
 
         Cita guardado = citaRepository.save(cita);
+        CitaResumen resumen = CitaResumen.builder()
+                .cita(guardado)
+                .fecha(guardado.getFechaCita())
+                .hora(guardado.getHoraCita())
+                .estado(guardado.getEstado())
+                .medico(guardado.getDetalleCita().getMedicoEspecialidad().getMedico())
+                .especialidad(guardado.getDetalleCita().getMedicoEspecialidad().getEspecialidad().getNombre())
+                .tipo("Normal") // por ejemplo
+                // Tomar duración de la disponibilidad
+                .duracionMinutos(guardado.getDisponibilidad() != null
+                        ? guardado.getDisponibilidad().getDuracionMinutos()
+                        : 30) // valor por defecto si no existe
+                .precio(guardado.getDetalleCita().getPrecioTotal() != null
+                        ? guardado.getDetalleCita().getPrecioTotal()
+                        : BigDecimal.ZERO)
+                .motivo(guardado.getMotivoConsulta())
+                .consultorio(guardado.getDisponibilidad() != null
+                        ? guardado.getDisponibilidad().getNombreTurno()
+                        : "Por asignar")
+                .build();
+
+
+        citaResumenRepository.save(resumen);
         return citaMapper.toDTO(guardado);
     }
+
+
+    /// aca falta arrglar
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public CitaResponseDTO obtenerPorId(Integer id) {
@@ -247,9 +304,5 @@ public class CitaServiceImpl implements CitaService {
 
         return citaMapper.toDTO(cita);
     }
-
-
-
-
 
 }

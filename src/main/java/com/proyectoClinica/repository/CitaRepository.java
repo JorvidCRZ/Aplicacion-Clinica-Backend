@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -123,6 +124,20 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
     Map<String, Object> obtenerHorasPromedioPorMedico(@Param("idMedico") Integer idMedico);
 
     Optional<Cita> findById(Integer id);
+
+
+
+
+
+    @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Cita c " +
+            "WHERE c.paciente.persona.idPersona = :idPaciente " +
+            "AND c.fechaCita = :fecha " +
+            "AND c.horaCita BETWEEN :horaInicio AND :horaFin")
+    boolean existeCitaCercana(@Param("idPaciente") Integer idPaciente,
+                              @Param("fecha") LocalDate fecha,
+                              @Param("horaInicio") LocalTime horaInicio,
+                              @Param("horaFin") LocalTime horaFin);
+
 
 }
 
