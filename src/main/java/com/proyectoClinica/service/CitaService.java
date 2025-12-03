@@ -1,5 +1,6 @@
 package com.proyectoClinica.service;
 
+import com.proyectoClinica.dto.request.ActualizarEstadoCitaRequest;
 import com.proyectoClinica.dto.request.CitaRequestDTO;
 import com.proyectoClinica.dto.response.CitaMedicoViewDTO;
 import com.proyectoClinica.dto.response.CitaResponseDTO;
@@ -27,5 +28,9 @@ public interface CitaService {
     /*Citas por medico*/
     List<CitaMedicoViewDTO> listarCitasDashboardPorMedico(Integer idMedico);
     HorasEstimadasCitasDTO obtenerHorasYPromedioPorMedico(Integer idMedico);
+
+    CitaResponseDTO actualizarEstado(Integer id, ActualizarEstadoCitaRequest request);
+
+
 
 }

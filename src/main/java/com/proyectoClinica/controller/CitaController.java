@@ -1,5 +1,6 @@
 package com.proyectoClinica.controller;
 
+import com.proyectoClinica.dto.request.ActualizarEstadoCitaRequest;
 import com.proyectoClinica.dto.request.CitaRequestDTO;
 import com.proyectoClinica.dto.response.CitaMedicoViewDTO;
 import com.proyectoClinica.dto.response.CitaResponseDTO;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/citas")
@@ -73,5 +75,14 @@ public class CitaController {
     ) {
         return ResponseEntity.ok(citaService.obtenerHorasYPromedioPorMedico(idMedico));
     }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<CitaResponseDTO> actualizarEstado(
+            @PathVariable Integer id,
+            @RequestBody ActualizarEstadoCitaRequest request
+    ) {
+        return ResponseEntity.ok(citaService.actualizarEstado(id, request));
+    }
+
 
 }

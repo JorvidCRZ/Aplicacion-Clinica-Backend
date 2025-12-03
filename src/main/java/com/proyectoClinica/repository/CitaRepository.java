@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Repository
@@ -120,6 +121,8 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
       AND c.estado = 'completada'
 """, nativeQuery = true)
     Map<String, Object> obtenerHorasPromedioPorMedico(@Param("idMedico") Integer idMedico);
+
+    Optional<Cita> findById(Integer id);
 
 }
 

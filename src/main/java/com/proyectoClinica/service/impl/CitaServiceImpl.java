@@ -1,5 +1,6 @@
 package com.proyectoClinica.service.impl;
 
+import com.proyectoClinica.dto.request.ActualizarEstadoCitaRequest;
 import com.proyectoClinica.dto.request.CitaRequestDTO;
 import com.proyectoClinica.dto.response.CitaMedicoViewDTO;
 import com.proyectoClinica.dto.response.CitaResponseDTO;
@@ -222,6 +223,36 @@ public class CitaServiceImpl implements CitaService {
 
         return new HorasEstimadasCitasDTO(horas, promedio);
     }
+
+    @Override
+    public CitaResponseDTO actualizarEstado(Integer idCita, ActualizarEstadoCitaRequest request) {
+
+        Cita cita = citaRepository.findById(idCita)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "La cita no existe"));
+
+        String nuevoEstado = request.getEstado();
+
+        if (nuevoEstado == null || nuevoEstado.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El estado no puede estar vacío");
+        }
+
+        nuevoEstado = nuevoEstado.toLowerCase();
+
+        List<String> estadosValidos = List.of("pendiente", "programada", "completada", "cancelada","no-show");
+
+        if (!estadosValidos.contains(nuevoEstado)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Estado inválido. Estados permitidos: " + estadosValidos
+            );
+        }
+
+        cita.setEstado(nuevoEstado);
+        citaRepository.save(cita);
+
+        return citaMapper.toDTO(cita);
+    }
+
 
 
 
