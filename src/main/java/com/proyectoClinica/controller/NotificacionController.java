@@ -39,7 +39,6 @@ public class NotificacionController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
-
     @GetMapping("/contador-no-leidas")
     public ResponseEntity<Map<String, Long>> contarNotificacionesNoLeidas(
             @RequestHeader("X-Usuario-Id") Integer usuarioId) {

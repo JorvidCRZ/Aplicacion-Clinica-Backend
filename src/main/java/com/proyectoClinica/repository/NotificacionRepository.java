@@ -17,7 +17,5 @@ public interface NotificacionRepository  extends JpaRepository<Notificacion, Lon
     List<Notificacion> findByTipoAndActivaTrueOrderByFechaCreacionDesc(String tipo);
 
     Long countByUsuarioDestinoAndLeidaFalseAndActivaTrue(Usuario usuario);
-
     Optional<Notificacion> findById(Long id);
 }
-

@@ -18,4 +18,3 @@ public class SolicitudHorarioResponseDTO {
     private LocalDateTime fechaAprobacion;
     private String comentariosAdmin;
 }
-

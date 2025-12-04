@@ -26,7 +26,7 @@ public class SolicitudHorarioController {
             @RequestBody SolicitudHorarioRequestDTO solicitudDTO,
             @RequestHeader("X-Usuario-Id") Integer usuarioId) {
         try {
-            log.info("📥 Médico enviando solicitud - UsuarioId: {}, MédicoId: {}",
+            log.info(" Médico enviando solicitud - UsuarioId: {}, MédicoId: {}",
                     usuarioId, solicitudDTO.getMedicoId());
 
             SolicitudHorarioResponseDTO response = solicitudHorarioService.crearSolicitud(solicitudDTO, usuarioId);
@@ -43,7 +43,7 @@ public class SolicitudHorarioController {
             @RequestBody SolicitudHorarioRequestDTO solicitudDTO,
             @RequestHeader("X-Usuario-Id") Integer adminId) {
         try {
-            log.info("👑 Admin creando solicitud - AdminId: {}, MédicoId: {}",
+            log.info(" Admin creando solicitud - AdminId: {}, MédicoId: {}",
                     adminId, solicitudDTO.getMedicoId());
 
             SolicitudHorarioResponseDTO response = solicitudHorarioService.crearSolicitudComoAdmin(solicitudDTO, adminId);
@@ -61,7 +61,7 @@ public class SolicitudHorarioController {
             @RequestBody AprobarSolicitudRequestDTO requestDTO,
             @RequestHeader("X-Usuario-Id") Integer adminId) {
         try {
-            log.info("✅ Admin aprobando solicitud - AdminId: {}, SolicitudId: {}, Aprobar: {}",
+            log.info(" Admin aprobando solicitud - AdminId: {}, SolicitudId: {}, Aprobar: {}",
                     adminId, solicitudId, requestDTO.isAprobar());
 
             SolicitudHorarioResponseDTO response = solicitudHorarioService.aprobarSolicitud(solicitudId, requestDTO, adminId);
@@ -77,7 +77,7 @@ public class SolicitudHorarioController {
     public ResponseEntity<List<SolicitudHorarioResponseDTO>> obtenerSolicitudesPendientes() {
         try {
             List<SolicitudHorarioResponseDTO> solicitudes = solicitudHorarioService.obtenerSolicitudesPendientes();
-            log.info("📋 Obteniendo {} solicitudes pendientes", solicitudes.size());
+            log.info(" Obteniendo {} solicitudes pendientes", solicitudes.size());
             return ResponseEntity.ok(solicitudes);
         } catch (Exception e) {
             log.error("❌ Error al obtener solicitudes pendientes: {}", e.getMessage());
@@ -90,7 +90,7 @@ public class SolicitudHorarioController {
     public ResponseEntity<List<SolicitudHorarioResponseDTO>> obtenerMisSolicitudes(
             @RequestHeader("X-Usuario-Id") Integer usuarioId) {
         try {
-            log.info("👨‍⚕️ Médico viendo sus solicitudes - UsuarioId: {}", usuarioId);
+            log.info(" Médico viendo sus solicitudes - UsuarioId: {}", usuarioId);
 
             List<SolicitudHorarioResponseDTO> solicitudes = solicitudHorarioService.obtenerSolicitudesPorUsuario(usuarioId);
             return ResponseEntity.ok(solicitudes);
