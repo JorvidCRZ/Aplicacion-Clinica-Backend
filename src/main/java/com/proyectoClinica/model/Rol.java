@@ -17,10 +17,10 @@ public class Rol {
     @Column(name = "id_rol")
     private Integer idRol;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
 
-    @Column
+    @Column(name = "descripcion", columnDefinition = "text")
     private String descripcion;
 
 }

@@ -19,10 +19,10 @@ public class Especialidad {
     @Column(name = "id_especialidad")
     private Integer idEspecialidad;
 
-    @Column(nullable = false, length = 100)
+    @Column(name="nombre" , nullable = false, length = 100)
     private String nombre;
 
-    @Column
+    @Column(name = "descripcion")
     private String descripcion;
 
     @Column(name = "url_img_icono")
@@ -34,51 +34,11 @@ public class Especialidad {
     @Column(name="descripcion_portada")
     private String descripcionPortada;
 
-    public Integer getIdEspecialidad() {
-		return idEspecialidad;
-	}
-
-	public void setIdEspecialidad(Integer idEspecialidad) {
-		this.idEspecialidad = idEspecialidad;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public String getUrlImgIcono() {
-		return urlImgIcono;
-	}
-
-	public void setUrlImgIcono(String urlImgIcono) {
-		this.urlImgIcono = urlImgIcono;
-	}
-
-	public String getUrlImgPort() {
-		return urlImgPort;
-	}
-
-	public void setUrlImgPort(String urlImgPort) {
-		this.urlImgPort = urlImgPort;
-	}
-
-	public String getDescripcionPortada() {
-		return descripcionPortada;
-	}
-
-	public void setDescripcionPortada(String descripcionPortada) {
-		this.descripcionPortada = descripcionPortada;
-	}
+    @PrePersist
+    public void prePersist() {
+        if (descripcion == null) descripcion = "";
+        if (urlImgIcono == null) urlImgIcono = "";
+        if (urlImgPort == null) urlImgPort = "";
+        if (descripcionPortada == null) descripcionPortada = "";
+    }
 }

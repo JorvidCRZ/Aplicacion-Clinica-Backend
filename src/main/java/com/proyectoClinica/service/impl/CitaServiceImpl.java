@@ -1,24 +1,20 @@
 package com.proyectoClinica.service.impl;
 
+import com.proyectoClinica.dto.request.ActualizarEstadoCitaRequest;
 import com.proyectoClinica.dto.request.CitaRequestDTO;
 import com.proyectoClinica.dto.response.CitaMedicoViewDTO;
 import com.proyectoClinica.dto.response.CitaResponseDTO;
 import com.proyectoClinica.dto.response.HorasEstimadasCitasDTO;
 import com.proyectoClinica.mapper.CitaMapper;
-import com.proyectoClinica.model.DetalleCita;
-import com.proyectoClinica.model.DisponibilidadMedico;
-import com.proyectoClinica.model.Paciente;
-import com.proyectoClinica.repository.DetalleCitaRepository;
-import com.proyectoClinica.repository.DisponibilidadMedicoRepository;
-import com.proyectoClinica.repository.PacienteRepository;
+import com.proyectoClinica.model.*;
+import com.proyectoClinica.repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import com.proyectoClinica.model.Cita;
-import com.proyectoClinica.repository.CitaRepository;
 import com.proyectoClinica.service.CitaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +27,26 @@ public class CitaServiceImpl implements CitaService {
     private final CitaMapper citaMapper;
     private final PacienteRepository pacienteRepository;
     private final DetalleCitaRepository detalleCitaRepository;
+    private final HorarioBloqueRepository horarioBloqueRepository;
     private final DisponibilidadMedicoRepository disponibilidadMedicoRepository;
+    private final CitaResumenRepository citaResumenRepository;
 
     @Override
     public CitaResponseDTO crear(CitaRequestDTO requestDTO) {
+
+        // Validación: evitar que el paciente tenga otra cita muy cercana
+        boolean conflictoHora = citaRepository.existeCitaCercana(
+                requestDTO.getIdPaciente(),
+                requestDTO.getFechaCita(),
+                requestDTO.getHoraCita().minusMinutes(30), // intervalo previo permitido
+                requestDTO.getHoraCita().plusMinutes(30)   // intervalo posterior permitido
+        );
+
+        if (conflictoHora) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "El paciente ya tiene otra cita en un horario cercano");
+        }
+
         // Validaciones y carga de entidades relacionadas
         Paciente paciente = pacienteRepository.findById(requestDTO.getIdPaciente())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Paciente no encontrado"));
@@ -113,8 +125,49 @@ public class CitaServiceImpl implements CitaService {
                 .build();
 
         Cita guardado = citaRepository.save(cita);
+        CitaResumen resumen = CitaResumen.builder()
+                .cita(guardado)
+                .fecha(guardado.getFechaCita())
+                .hora(guardado.getHoraCita())
+                .estado(guardado.getEstado())
+                .medico(guardado.getDetalleCita().getMedicoEspecialidad().getMedico())
+                .especialidad(guardado.getDetalleCita().getMedicoEspecialidad().getEspecialidad().getNombre())
+                .tipo("Normal") // por ejemplo
+                // Tomar duración de la disponibilidad
+                .duracionMinutos(guardado.getDisponibilidad() != null
+                        ? guardado.getDisponibilidad().getDuracionMinutos()
+                        : 30) // valor por defecto si no existe
+                .precio(guardado.getDetalleCita().getPrecioTotal() != null
+                        ? guardado.getDetalleCita().getPrecioTotal()
+                        : BigDecimal.ZERO)
+                .motivo(guardado.getMotivoConsulta())
+                .consultorio(guardado.getDisponibilidad() != null
+                        ? guardado.getDisponibilidad().getNombreTurno()
+                        : "Por asignar")
+                .build();
+
+
+        citaResumenRepository.save(resumen);
         return citaMapper.toDTO(guardado);
     }
+
+
+    /// aca falta arrglar
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public CitaResponseDTO obtenerPorId(Integer id) {
@@ -223,7 +276,33 @@ public class CitaServiceImpl implements CitaService {
         return new HorasEstimadasCitasDTO(horas, promedio);
     }
 
+    @Override
+    public CitaResponseDTO actualizarEstado(Integer idCita, ActualizarEstadoCitaRequest request) {
 
+        Cita cita = citaRepository.findById(idCita)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "La cita no existe"));
 
+        String nuevoEstado = request.getEstado();
+
+        if (nuevoEstado == null || nuevoEstado.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El estado no puede estar vacío");
+        }
+
+        nuevoEstado = nuevoEstado.toLowerCase();
+
+        List<String> estadosValidos = List.of("pendiente", "programada", "completada", "cancelada","no-show");
+
+        if (!estadosValidos.contains(nuevoEstado)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Estado inválido. Estados permitidos: " + estadosValidos
+            );
+        }
+
+        cita.setEstado(nuevoEstado);
+        citaRepository.save(cita);
+
+        return citaMapper.toDTO(cita);
+    }
 
 }

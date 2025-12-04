@@ -38,6 +38,22 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
     @Query(value = "SELECT * FROM vista_pacientes_dashboard WHERE id_medico = :idMedico", nativeQuery = true)
     List<Map<String, Object>> listarPacientesDashboardPorMedico(@Param("idMedico") Integer idMedico);
 
+// Estadística de Pacientes
+@Query(value = """
+    SELECT
+        TO_CHAR(p.created_at, 'YYYY-MM') AS mes,
+        COUNT(*) AS nuevos_registros,
+        COALESCE(AVG(c.cantidad_citas), 0) AS citas_promedio
+    FROM paciente p
+    LEFT JOIN (
+        SELECT id_paciente, COUNT(*) AS cantidad_citas
+        FROM cita
+        GROUP BY id_paciente
+    ) c ON c.id_paciente = p.id_paciente
+    GROUP BY mes
+    ORDER BY mes;
+""", nativeQuery = true)
+List<Map<String, Object>> estadisticasPacientes();
 
     /*Calcular puntualidad del paciente*/
     @Query(value = """

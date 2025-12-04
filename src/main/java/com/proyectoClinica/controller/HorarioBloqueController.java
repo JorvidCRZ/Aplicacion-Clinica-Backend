@@ -1,6 +1,8 @@
 package com.proyectoClinica.controller;
 import com.proyectoClinica.dto.request.HorarioBloqueRequestDTO;
+import com.proyectoClinica.dto.response.BloquesPorDiaResponseDTO;
 import com.proyectoClinica.dto.response.HorarioBloqueResponseDTO;
+import com.proyectoClinica.dto.response.HorariosMedicoResponseDTO;
 import com.proyectoClinica.service.HorarioBloqueService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -39,4 +41,35 @@ public class HorarioBloqueController {
         service.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/medico/{idMedico}")
+    public ResponseEntity<HorariosMedicoResponseDTO> obtenerHorariosPorMedico(
+            @PathVariable Integer idMedico) {
+
+        return ResponseEntity.ok(service.obtenerHorariosPorMedico(idMedico));
+    }
+
+    @GetMapping("/disponibilidades")
+    public ResponseEntity<?> listarDisponibilidades() {
+        return ResponseEntity.ok(service.listarDisponibilidades());
+    }
+
+    @GetMapping("/medicos/{idMedico}/bloques-por-dia")
+    public ResponseEntity<List<BloquesPorDiaResponseDTO>> getBloquesPorMedico(@PathVariable Integer idMedico) {
+        return ResponseEntity.ok(service.obtenerBloquesPorMedico(idMedico));
+    }
+
+    @PutMapping("/medico/{idMedico}/disponibilidad")
+    public ResponseEntity<String> actualizarBloquesDisponibles(
+            @PathVariable Integer idMedico,
+            @RequestParam boolean disponible) {
+
+        int count = service.actualizarDisponibilidadPorMedico(idMedico, disponible);
+
+        return ResponseEntity.ok(
+                "Se actualizaron " + count + " bloques a estado: " +
+                        (disponible ? "DISPONIBLE" : "NO DISPONIBLE")
+        );
+    }
+
 }

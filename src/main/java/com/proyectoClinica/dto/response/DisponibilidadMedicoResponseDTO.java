@@ -23,5 +23,4 @@ public class DisponibilidadMedicoResponseDTO {
     private Boolean vigencia;
     private Boolean diaActivo;
     private Integer duracionMinutos;
-
 }

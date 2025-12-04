@@ -25,12 +25,19 @@ public class Pago {
     @Column(name = "monto_total", nullable = false)
     private BigDecimal montoTotal;
 
-    @Column(length = 50)
+    @Column(name = "metodo", length = 50)
     private String metodo;
 
-    @Column(length = 20)
+    @Column(name = "estado", length = 20)
     private String estado;
 
     @Column(name = "fecha_pago")
     private LocalDateTime fechaPago;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.fechaPago == null) {
+            this.fechaPago = LocalDateTime.now();
+        }
+    }
 }

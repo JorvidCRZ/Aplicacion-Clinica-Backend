@@ -29,9 +29,18 @@ public class DetalleCita {
     @JoinColumn(name = "id_subespecialidad")
     private SubEspecialidad subEspecialidad;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "precio_consulta", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioConsulta;
 
     @Column(name = "precio_total", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioTotal;
+
+    @Column(name = "diagnostico", columnDefinition = "text")
+    private String diagnostico;
+
+    @PrePersist
+    public void prePersistDefaults() {
+        if (diagnostico == null) diagnostico = "";
+        if (precioTotal == null) precioTotal = BigDecimal.ZERO;
+    }
 }

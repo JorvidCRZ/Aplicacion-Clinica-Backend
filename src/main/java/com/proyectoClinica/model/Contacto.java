@@ -35,6 +35,7 @@ public class Contacto {
 
     @Column(length = 150)
     private String asunto;
+
     @Column(nullable = false, columnDefinition = "text")
     private String mensaje;
 
@@ -50,7 +51,6 @@ public class Contacto {
         if (this.fecha == null) {
             this.fecha = LocalDateTime.now();
         }
-        // Ensure newly added columns are non-null in DB (use empty string if not provided)
         if (this.telefono == null) this.telefono = "";
         if (this.tipoConsulta == null) this.tipoConsulta = "";
         if (this.asunto == null) this.asunto = "";

@@ -28,10 +28,10 @@ public class Recordatorio {
     @Column(name = "fecha_envio", nullable = false)
     private LocalDateTime fechaEnvio;
 
-    @Column(nullable = false, length = 50)
+    @Column(name="tipo", nullable = false, length = 50)
     private String tipo;
 
-    @Column(length = 20)
+    @Column(name="estado", length = 20)
     private String estado;
 
     @Column(name = "destinatario_correo", length = 250)

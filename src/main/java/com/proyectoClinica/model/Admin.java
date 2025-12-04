@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Admin {
+public class Admin extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,10 +37,10 @@ public class Admin {
     @Column(length = 10)
     private String estado;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
+    @PrePersist
+    public void prePersist() {
+        if (cargo == null) cargo = "Administrador General";
+        if (nivelAcceso == null) nivelAcceso = "alto";
+        if (estado == null) estado = "activo";
+    }
 }

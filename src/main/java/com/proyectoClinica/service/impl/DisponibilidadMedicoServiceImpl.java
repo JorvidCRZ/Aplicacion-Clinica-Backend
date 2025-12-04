@@ -45,27 +45,43 @@ public class DisponibilidadMedicoServiceImpl implements DisponibilidadMedicoServ
     @Override
     @Transactional
     public DisponibilidadMedicoResponseDTO crear(DisponibilidadMedicoRequestDTO requestDTO) {
-        validarHoras(requestDTO.getHoraInicio(), requestDTO.getHoraFin());
 
-        // validamos solapamiento con turnos existentes del mismo medico y día
-    List<DisponibilidadMedico> existentes = disponibilidadMedicoRepository
-        .findByMedico_IdMedicoAndDiaSemanaAndVigenciaTrue(requestDTO.getIdMedico(), requestDTO.getDiaSemana());
+        // Validar horas
+        if(requestDTO.getHoraFin().isBefore(requestDTO.getHoraInicio())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La hora de fin debe ser posterior a la hora de inicio");
+        }
 
-        if (tieneSolapamientoConLista(requestDTO.getHoraInicio(), requestDTO.getHoraFin(), existentes)) {
+        // Validar solapamiento
+        List<DisponibilidadMedico> existentes = disponibilidadMedicoRepository
+                .findByMedico_IdMedicoAndDiaSemanaAndVigenciaTrue(requestDTO.getIdMedico(), requestDTO.getDiaSemana());
+
+        boolean haySolapamiento = existentes.stream().anyMatch(d ->
+                !requestDTO.getHoraFin().isBefore(d.getHoraInicio()) &&
+                        !requestDTO.getHoraInicio().isAfter(d.getHoraFin())
+        );
+
+        if (haySolapamiento) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "El horario se solapa con otro turno existente para el mismo día.");
         }
 
+        // Convertir DTO a entidad
         DisponibilidadMedico entidad = disponibilidadMedicoMapper.toEntity(requestDTO);
 
-        // Cargar y setear el Medico (clave foránea) antes de persistir
+        // Cargar Medico
         Medico medico = medicoRepository.findById(requestDTO.getIdMedico())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Médico no encontrado"));
         entidad.setMedico(medico);
 
-        int duracionMinutos = (int) Duration.between(requestDTO.getHoraInicio(), requestDTO.getHoraFin()).toMinutes();
-        entidad.setDuracionMinutos(duracionMinutos);
+        // Definir duración de cada slot
+        if (requestDTO.getDuracionMinutos() != null && requestDTO.getDuracionMinutos() > 0) {
+            entidad.setDuracionMinutos(requestDTO.getDuracionMinutos());
+        } else {
+            entidad.setDuracionMinutos(30); // default 30 minutos
+        }
 
+        // Guardar en DB -> Trigger de PostgreSQL genera automáticamente los slots
         DisponibilidadMedico guardado = disponibilidadMedicoRepository.save(entidad);
+
         return disponibilidadMedicoMapper.toDTO(guardado);
     }
 

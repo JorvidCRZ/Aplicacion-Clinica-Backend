@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Usuario {
+public class Usuario extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +36,6 @@ public class Usuario {
     @JoinColumn(name = "id_rol", nullable = false)
     private Rol rol;
 
-    @OneToMany(mappedBy = "usuarioAgrego")
+    @OneToMany(mappedBy = "usuarioAgrego", fetch = FetchType.LAZY)
     private List<Paciente> pacientesAgregados;
 }

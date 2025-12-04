@@ -9,13 +9,15 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "medico")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+
 public class Medico {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,4 +49,6 @@ public class Medico {
     private List<HorarioDisponible> horariosDisponibles = new ArrayList<>();
 
 
+    @OneToMany(mappedBy = "medico", fetch = FetchType.LAZY)
+    private List<CitaResumen> citasResumen;
 }

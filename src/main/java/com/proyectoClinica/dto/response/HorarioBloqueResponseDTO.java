@@ -15,4 +15,5 @@ public class HorarioBloqueResponseDTO {
     private LocalTime horaFin;
     private Boolean disponible;
     private Integer idCita;
+    private Integer duracionMinutos;
 }

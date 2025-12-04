@@ -15,9 +15,12 @@ import com.proyectoClinica.repository.UsuarioRepository;
 import com.proyectoClinica.service.MedicoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -137,7 +140,15 @@ public class MedicoServiceImpl implements MedicoService {
         persona.setTelefono(req.getTelefono());
         persona.setDireccion(req.getDireccion());
 
-        // Actualizar usuario
+        if (req.getFechaNacimiento() != null && !req.getFechaNacimiento().isBlank()) {
+            try {
+                persona.setFechaNacimiento(LocalDate.parse(req.getFechaNacimiento()));
+            } catch (Exception e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato de fecha inválido. Usar yyyy-MM-dd");
+            }
+        }
+
+        // ✅ Actualizar usuario
         usuario.setCorreo(req.getCorreo());
 
         // Actualizar médico

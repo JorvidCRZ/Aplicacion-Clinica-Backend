@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/medico-especialidades")
@@ -47,4 +49,21 @@ public class MedicoEspecialidadController {
     ) {
         return medicoEspecialidadService.obtenerEspecialidadPorIdMedico(idMedico);
     }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<Map<String, Object>> buscarMedicoEspecialidad(
+            @RequestParam String medicoNombre,
+            @RequestParam String especialidad) {
+
+        Integer idMedicoEspecialidad = medicoEspecialidadService
+                .buscarIdPorNombreYEspecialidad(medicoNombre, especialidad);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("idMedicoEspecialidad", idMedicoEspecialidad);
+        return ResponseEntity.ok(response);
+    }
+
+
+
+
 }

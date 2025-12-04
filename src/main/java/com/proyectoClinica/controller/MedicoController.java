@@ -59,14 +59,6 @@ public class MedicoController {
     }
 
 
-    // ejemplo: endpoint para las citas del medico (implementa MedicoService)
-    /*@GetMapping("/{id}/citas")
-    public ResponseEntity<Map<String,Object>> citasMedico(@PathVariable Integer id) {
-        Map<String,Object> body = new HashMap<>();
-        body.put("mensaje", "Citas del médico");
-        body.put("data", medicoService.listarCitas(id));
-        return ResponseEntity.ok(body);
-    }*/
 
 
     private final DisponibilidadMedicoService disponibilidadMedicoService;
@@ -131,6 +123,4 @@ public class MedicoController {
                     .body("Error actualizando perfil: " + e.getMessage());
         }
     }
-
-
 }

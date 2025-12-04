@@ -22,7 +22,7 @@ public class PagoDetalle {
     private Integer idPagoDetalle;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cita")
+    @JoinColumn(name = "id_cita", nullable = false)
     private Cita cita;
 
     @Column(name = "monto_asociado", nullable = false)

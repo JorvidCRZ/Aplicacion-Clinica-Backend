@@ -30,11 +30,21 @@ public class HorarioBloque {
     @Column(name = "hora_fin", nullable = false)
     private LocalTime horaFin;
 
-    @Column(nullable = false)
+    @Column(name = "disponible", nullable = false)
     @Builder.Default
-    private Boolean disponible = true;
+    private Boolean disponible = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cita")
     private Cita cita;
+
+    @PrePersist
+    public void prePersist() {
+        if (fecha == null) {
+            fecha = LocalDate.now();
+        }
+        if (disponible == null) {
+            disponible = true;
+        }
+    }
 }

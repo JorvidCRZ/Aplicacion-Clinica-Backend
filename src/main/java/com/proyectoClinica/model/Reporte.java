@@ -25,7 +25,7 @@ public class Reporte {
     @JoinColumn(name = "id_admin")
     private Usuario admin;
 
-    @Column(length = 50)
+    @Column(name="tipo",length = 50)
     private String tipo;
 
     @Column(name = "fecha_generacion")
@@ -33,4 +33,9 @@ public class Reporte {
 
     @Column(name = "ruta_archivo")
     private String rutaArchivo;
+
+    @PrePersist
+    public void prePersist() {
+        if (fechaGeneracion == null) fechaGeneracion = LocalDateTime.now();
+    }
 }

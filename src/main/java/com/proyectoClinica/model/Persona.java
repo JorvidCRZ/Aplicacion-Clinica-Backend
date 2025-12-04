@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "persona")
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Persona {
+public class Persona extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,4 +68,10 @@ public class Persona {
     @OneToOne(mappedBy = "persona")
     @JsonBackReference
     private Usuario usuario;
+
+    @PrePersist
+    public void prePersistDefaults() {
+        if (telefono == null) telefono = "";
+        if (pais == null) pais = "";
+    }
 }

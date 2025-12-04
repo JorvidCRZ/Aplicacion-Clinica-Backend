@@ -15,5 +15,5 @@ public interface MedicoEspecialidadService {
 
     LlamarEspecialidadMedicoDTO obtenerEspecialidadPorIdMedico(Integer idMedico);
 
-
+    Integer buscarIdPorNombreYEspecialidad(String medicoNombre, String especialidad);
 }
