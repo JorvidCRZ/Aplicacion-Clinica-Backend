@@ -26,7 +26,6 @@ public class ReporteMedicoPDFExporter {
             Font fontSubtitulo = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
             Font fontContenido = new Font(Font.FontFamily.HELVETICA, 9);
 
-            // Fecha y hora actual
             LocalDateTime ahora = LocalDateTime.now();
             String fechaActual = ahora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             String horaActual = ahora.format(DateTimeFormatter.ofPattern("HH:mm"));
@@ -40,23 +39,18 @@ public class ReporteMedicoPDFExporter {
             try (InputStream logoStream = getClass().getResourceAsStream("/static/images/logo.png")) {
                 if (logoStream != null) {
                     logo = Image.getInstance(logoStream.readAllBytes());
-                    logo.scaleToFit(90, 90); // tamaño profesional ajustado
-                    logo.setAlignment(Element.ALIGN_LEFT);
+                    logo.scaleToFit(90, 90);
                 }
             }
 
             PdfPCell logoCell = new PdfPCell();
-            if (logo != null) {
-                logoCell.addElement(logo);
-            }
+            if (logo != null) logoCell.addElement(logo);
             logoCell.setBorder(Rectangle.NO_BORDER);
-            logoCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
             encabezadoTabla.addCell(logoCell);
 
-            // Encabezado
+            // Texto encabezado
             PdfPCell textoEncabezado = new PdfPCell();
             textoEncabezado.setBorder(Rectangle.NO_BORDER);
-            textoEncabezado.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
             Paragraph titulo = new Paragraph("CLÍNICA TU SALUD", fontTitulo);
             titulo.setAlignment(Element.ALIGN_CENTER);
@@ -77,20 +71,24 @@ public class ReporteMedicoPDFExporter {
 
             encabezadoTabla.addCell(textoEncabezado);
             document.add(encabezadoTabla);
-
             document.add(Chunk.NEWLINE);
 
-            // Tabla de datos
-            PdfPTable tabla = new PdfPTable(8);
+            // TABLA
+            PdfPTable tabla = new PdfPTable(6);
             tabla.setWidthPercentage(100);
-            tabla.setWidths(new float[]{1, 3, 2, 2, 2, 3, 2, 2});
+            tabla.setWidths(new float[]{1.2f, 3.5f, 3.0f, 2.5f, 3.0f, 2.5f});
 
             // Encabezados
             Font headerFont = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD, BaseColor.WHITE);
-            BaseColor headerColor = new BaseColor(0, 102, 204); // Azul elegante
+            BaseColor headerColor = new BaseColor(0, 102, 204);
+
             String[] headers = {
-                    "ID", "Nombre completo", "DNI", "Colegiatura",
-                    "Años Exp.", "Especialidades", "Teléfono", "Ubicación"
+                    "ID",
+                    "Nombre completo",
+                    "Correo",
+                    "Colegiatura",
+                    "Especialidad",
+                    "Teléfono"
             };
 
             for (String h : headers) {
@@ -101,27 +99,30 @@ public class ReporteMedicoPDFExporter {
                 tabla.addCell(celda);
             }
 
-            // Cuerpo
+            // Cuerpo tabla
             Font bodyFont = new Font(Font.FontFamily.HELVETICA, 9);
-            for (Medico medico : medicos) {
-                String nombreCompleto = medico.getPersona().getNombre1() +
-                        (medico.getPersona().getNombre2() != null ? " " + medico.getPersona().getNombre2() : "") + " " +
-                        medico.getPersona().getApellidoPaterno() + " " + medico.getPersona().getApellidoMaterno();
 
-                String especialidades = (medico.getEspecialidades() != null && !medico.getEspecialidades().isEmpty())
+            for (Medico medico : medicos) {
+
+                String nombreCompleto =
+                        medico.getPersona().getNombre1()
+                                + (medico.getPersona().getNombre2() != null ? " " + medico.getPersona().getNombre2() : "")
+                                + " " + medico.getPersona().getApellidoPaterno()
+                                + " " + medico.getPersona().getApellidoMaterno();
+
+                String especialidad = (medico.getEspecialidades() != null && !medico.getEspecialidades().isEmpty())
                         ? medico.getEspecialidades().stream()
-                        .map(medicoEsp -> medicoEsp.getEspecialidad().getNombre())
+                        .map(e -> e.getEspecialidad().getNombre())
                         .collect(Collectors.joining(", "))
                         : "Sin especialidad";
 
                 agregarCelda(tabla, String.valueOf(medico.getIdMedico()), bodyFont);
                 agregarCelda(tabla, nombreCompleto, bodyFont);
-                agregarCelda(tabla, medico.getPersona().getDni(), bodyFont);
+                agregarCelda(tabla, medico.getUsuario().getCorreo(), bodyFont);
                 agregarCelda(tabla, medico.getColegiatura(), bodyFont);
-                agregarCelda(tabla, medico.getExperienciaAnios() != null ? String.valueOf(medico.getExperienciaAnios()) : "—", bodyFont);
-                agregarCelda(tabla, especialidades, bodyFont);
-                agregarCelda(tabla, medico.getPersona().getTelefono() != null ? medico.getPersona().getTelefono() : "—", bodyFont);
-                agregarCelda(tabla, medico.getPersona().getDistrito() != null ? medico.getPersona().getDistrito() : "—", bodyFont);
+
+                agregarCelda(tabla, especialidad, bodyFont);
+                agregarCelda(tabla, medico.getPersona().getTelefono(), bodyFont);
             }
 
             document.add(tabla);
@@ -133,7 +134,6 @@ public class ReporteMedicoPDFExporter {
         }
     }
 
-    // Celda del cuerpo
     private void agregarCelda(PdfPTable tabla, String texto, Font font) {
         PdfPCell celda = new PdfPCell(new Phrase(texto != null ? texto : "—", font));
         celda.setHorizontalAlignment(Element.ALIGN_CENTER);

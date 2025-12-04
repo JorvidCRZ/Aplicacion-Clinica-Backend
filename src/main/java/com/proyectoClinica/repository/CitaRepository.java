@@ -1,5 +1,6 @@
 package com.proyectoClinica.repository;
 
+import com.proyectoClinica.dto.response.ReporteRendimientoDoctorDTO;
 import com.proyectoClinica.model.Cita;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -83,6 +85,99 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
 """, nativeQuery = true)
     List<Map<String, Object>> listarCitasDashboardPorMedico(@Param("idMedico") Integer idMedico);
 
+    // MODIFICACIÓN
+// 1) RESUMEN POR ESTADO
+    @Query(value = """
+        SELECT
+            c.estado AS estado,
+            COUNT(*) AS cantidad
+        FROM cita c
+        WHERE c.fecha_cita BETWEEN :inicio AND :fin
+        GROUP BY c.estado
+        ORDER BY cantidad DESC
+        """, nativeQuery = true)
+    List<Map<String, Object>> contarCitasPorEstadoEntreFechas(
+            @Param("inicio") LocalDate inicio,
+            @Param("fin") LocalDate fin);
+
+
+    // 2) TOP DOCTORES
+    @Query(value = """
+        SELECT
+          CONCAT(pm.nombre1, ' ', COALESCE(pm.nombre2, ''), ' ', pm.apellido_paterno, ' ', pm.apellido_materno) AS nombre,
+          esp.nombre AS especialidad,
+          COUNT(*) AS total
+        FROM cita c
+        INNER JOIN detalle_cita dc ON c.id_detalle_cita = dc.id_detalle_cita
+        INNER JOIN medico_especialidad meesp ON meesp.id_medico_especialidad = dc.id_medico_especialidad
+        INNER JOIN medico me ON me.id_medico = meesp.id_medico
+        INNER JOIN persona pm ON me.id_persona = pm.id_persona
+        LEFT JOIN especialidad esp ON meesp.id_especialidad = esp.id_especialidad
+        WHERE c.fecha_cita BETWEEN :inicio AND :fin
+        GROUP BY me.id_medico,
+                 pm.nombre1,
+                 pm.nombre2,
+                 pm.apellido_paterno,
+                 pm.apellido_materno,
+                 esp.nombre
+        ORDER BY total DESC
+        LIMIT :limit
+        """, nativeQuery = true)
+    List<Map<String, Object>> topDoctoresEntreFechas(
+            @Param("inicio") LocalDate inicio,
+            @Param("fin") LocalDate fin,
+            @Param("limit") int limit);
+
+    // DESDE AQUÍ ES PARA LO QUE ESTAMOS TRABAJANDO CON RENDIMIENTO DE DOCTORES
+
+    @Query("""
+SELECT new com.proyectoClinica.dto.response.ReporteRendimientoDoctorDTO(
+    CONCAT(p.nombre1, ' ', COALESCE(p.nombre2, ''), ' ',
+           p.apellidoPaterno, ' ', p.apellidoMaterno),
+    e.nombre,
+    COUNT(c.idCita),
+    SUM(CASE WHEN c.estado = 'Completada' THEN 1 ELSE 0 END),
+    SUM(CASE WHEN c.estado = 'Cancelada' THEN 1 ELSE 0 END),
+    SUM(CASE WHEN c.estado = 'Pendiente' THEN 1 ELSE 0 END),
+    SUM(CASE WHEN c.estado = 'Completada' THEN dc.precioTotal ELSE 0 END)
+)
+FROM Cita c
+JOIN c.detalleCita dc
+JOIN dc.medicoEspecialidad meesp
+JOIN meesp.medico m
+JOIN m.persona p
+JOIN meesp.especialidad e
+GROUP BY p.nombre1, p.nombre2, p.apellidoPaterno, p.apellidoMaterno, e.nombre
+ORDER BY COUNT(c.idCita) DESC
+""")
+    List<ReporteRendimientoDoctorDTO> reporteRendimientoDoctores();
+
+    @Query("SELECT COUNT(c) FROM Cita c WHERE c.detalleCita.medicoEspecialidad.medico.idMedico = :idMedico")
+    long contarTotalCitas(@Param("idMedico") Integer idMedico);
+
+    @Query("SELECT COUNT(c) FROM Cita c WHERE c.estado = 'Completada' AND c.detalleCita.medicoEspecialidad.medico.idMedico = :idMedico")
+    long contarCompletadas(@Param("idMedico") Integer idMedico);
+
+    @Query("SELECT COUNT(c) FROM Cita c WHERE c.estado = 'Cancelada' AND c.detalleCita.medicoEspecialidad.medico.idMedico = :idMedico")
+    long contarCanceladas(@Param("idMedico") Integer idMedico);
+
+    @Query("SELECT COUNT(c) FROM Cita c WHERE c.estado = 'Pendiente' AND c.detalleCita.medicoEspecialidad.medico.idMedico = :idMedico")
+    long contarPendientes(@Param("idMedico") Integer idMedico);
+
+    @Query("SELECT SUM(dc.precioTotal) FROM Cita c JOIN c.detalleCita dc WHERE c.detalleCita.medicoEspecialidad.medico.idMedico = :idMedico AND c.estado = 'Completada'")
+    BigDecimal calcularIngresos(@Param("idMedico") Integer idMedico);
+
+    //------------------
+    @Query("SELECT c FROM Cita c " +
+            "JOIN FETCH c.paciente pac " +
+            "JOIN FETCH pac.persona ppac " +
+            "JOIN FETCH c.disponibilidad disp " +
+            "JOIN FETCH disp.medico med " +
+            "JOIN FETCH med.persona pmed " +
+            "LEFT JOIN FETCH med.especialidades me " + // <--- ¿Estás usando LEFT JOIN aquí?
+            "LEFT JOIN FETCH me.especialidad esp " +  // <--- ¿Y aquí?
+            "ORDER BY c.fechaCita DESC, c.horaCita DESC")
+    List<Cita> findAllForReport();
 
     /*--------------------------------------------------*/
 
