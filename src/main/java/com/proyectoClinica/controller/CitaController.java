@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -21,11 +23,22 @@ public class CitaController {
 
     private final CitaService citaService;
 
-    @PostMapping
+    @PostMapping("/reservar")
     public ResponseEntity<CitaResponseDTO> crearCita(@Valid @RequestBody CitaRequestDTO request) {
+        // Crear la cita usando el servicio
         CitaResponseDTO dto = citaService.crear(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+
+        // Construir la URL del recurso recién creado (/citas/{id})
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()      // /citas
+                .path("/{id}")             // agrega /{id}
+                .buildAndExpand(dto.getIdCita()) // reemplaza {id} con el id real
+                .toUri();
+
+        // Retornar 201 Created con body y Location header
+        return ResponseEntity.created(location).body(dto);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<CitaResponseDTO> obtener(@PathVariable Integer id) {

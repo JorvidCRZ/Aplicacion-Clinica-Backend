@@ -8,7 +8,9 @@ import com.proyectoClinica.model.MedicoEspecialidad;
 import com.proyectoClinica.repository.MedicoEspecialidadRepository;
 import com.proyectoClinica.service.MedicoEspecialidadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -59,6 +61,13 @@ public class MedicoEspecialidadServiceImpl implements MedicoEspecialidadService 
         return LlamarEspecialidadMedicoDTO.builder()
                 .nombreEspecialidad(nombre)
                 .build();
+    }
+
+
+    @Override
+    public Integer buscarIdPorNombreYEspecialidad(String medicoNombre, String especialidad) {
+        return medicoEspecialidadRepository.findIdByNombreMedicoYEspecialidad(medicoNombre, especialidad)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontró el médico con esa especialidad"));
     }
 
 }

@@ -7,7 +7,9 @@ import com.proyectoClinica.model.Especialidad;
 import com.proyectoClinica.repository.EspecialidadRepository;
 import com.proyectoClinica.service.EspecialidadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -59,6 +61,4 @@ public class EspecialidadServiceImpl implements EspecialidadService {
         }
         especialidadRepository.deleteById(id);
     }
-
-
 }

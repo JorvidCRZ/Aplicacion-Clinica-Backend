@@ -26,7 +26,7 @@ public class DisponibilidadController {
     public ResponseEntity<Map<String, Object>> crear(@Valid @RequestBody DisponibilidadMedicoRequestDTO request) {
         DisponibilidadMedicoResponseDTO dto = disponibilidadService.crear(request);
         Map<String, Object> body = new HashMap<>();
-        body.put("mensaje", "Turno creado correctamente");
+        body.put("mensaje", "Turno creado correctamente. Los slots se generarán automáticamente.");
         body.put("data", dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }

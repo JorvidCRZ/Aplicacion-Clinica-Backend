@@ -126,9 +126,6 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
     Optional<Cita> findById(Integer id);
 
 
-
-
-
     @Query("SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END FROM Cita c " +
             "WHERE c.paciente.persona.idPersona = :idPaciente " +
             "AND c.fechaCita = :fecha " +

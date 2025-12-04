@@ -6,6 +6,7 @@ import com.proyectoClinica.dto.response.HorarioBloqueResponseDTO;
 import com.proyectoClinica.dto.response.HorariosMedicoResponseDTO;
 import com.proyectoClinica.mapper.HorarioBloqueMapper;
 import com.proyectoClinica.mapper.HorarioDisponibleMapper;
+import com.proyectoClinica.model.DisponibilidadMedico;
 import com.proyectoClinica.model.HorarioBloque;
 import com.proyectoClinica.repository.HorarioBloqueRepository;
 import com.proyectoClinica.service.HorarioBloqueService;
@@ -32,8 +33,23 @@ public class HorarioBloqueServiceImpl implements HorarioBloqueService{
 
     @Override
     public HorarioBloqueResponseDTO crear(HorarioBloqueRequestDTO request) {
+        // Mapea el DTO a la entidad
         HorarioBloque entity = mapper.toEntity(request);
-        return mapper.toResponse(repository.save(entity));
+
+        // 🔹 Obtener la duración desde la disponibilidad
+        DisponibilidadMedico disponibilidad = entity.getDisponibilidadMedico();
+        if (disponibilidad == null || disponibilidad.getDuracionMinutos() == null) {
+            throw new RuntimeException("No se encontró duración de la disponibilidad");
+        }
+
+        // 🔹 Calcular horaFin automáticamente usando la duración
+        entity.setHoraFin(entity.getHoraInicio().plusMinutes(disponibilidad.getDuracionMinutos()));
+
+        // Guarda el bloque
+        HorarioBloque guardado = repository.save(entity);
+
+        // Devuelve DTO
+        return mapper.toResponse(guardado);
     }
 
     @Override

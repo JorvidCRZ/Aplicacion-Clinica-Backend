@@ -43,4 +43,7 @@ public class DisponibilidadMedicoRequestDTO {
 
     @NotNull(message = "El estado del día es obligatorio")
     private Boolean diaActivo;
+    
+    @Positive(message = "La duración debe ser positiva")
+    private Integer duracionMinutos;
 }
